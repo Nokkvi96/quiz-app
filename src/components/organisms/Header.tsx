@@ -1,8 +1,13 @@
 import Link from "next/link";
+import { useRecoilValue } from "recoil";
 
+import { scoreState } from "src/recoil/atoms";
 import { Box, Contain, Flex, Text } from "@components/system";
 
 export const Header: React.FC = () => {
+  const score = useRecoilValue(scoreState);
+  console.log(score);
+
   return (
     <Box
       as="header"
@@ -26,9 +31,7 @@ export const Header: React.FC = () => {
             </Link>
           </Text>
           <Text fontSize={[2, null, 3]} fontWeight="600">
-            <Link href="mailto:nokkvi96@gmail.com" passHref>
-              <a href="#">Hafa samband</a>
-            </Link>
+            {score.score} / {score.outOf}
           </Text>
         </Flex>
       </Contain>

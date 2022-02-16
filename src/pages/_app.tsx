@@ -1,9 +1,10 @@
 /* eslint-disable import/no-duplicates */
 import type { AppProps } from "next/app";
-import { DefaultSeo } from "@utils/DefaultSeo";
 import { ThemeProvider } from "styled-components";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { RecoilRoot } from "recoil";
 
+import { DefaultSeo } from "@utils/DefaultSeo";
 import { BaseLayout } from "@components/templates/BaseLayout";
 import { theme } from "@theme/theme";
 import { GlobalStyle } from "@theme/GlobalStyle";
@@ -17,12 +18,14 @@ function MyApp({ Component, pageProps }: AppProps) {
       <DefaultSeo />
       <ThemeProvider theme={theme}>
         <QueryClientProvider client={queryClient}>
-          <>
-            <GlobalStyle />
-            <BaseLayout>
-              <Component {...pageProps} />
-            </BaseLayout>
-          </>
+          <RecoilRoot>
+            <>
+              <GlobalStyle />
+              <BaseLayout>
+                <Component {...pageProps} />
+              </BaseLayout>
+            </>
+          </RecoilRoot>
         </QueryClientProvider>
       </ThemeProvider>
     </>

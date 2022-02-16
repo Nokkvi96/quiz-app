@@ -1,7 +1,13 @@
+import { useEffect, useRef } from "react";
 import type { NextPage } from "next";
 import { useQuery } from "react-query";
+import { QuizItem } from "src/types";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 
-import { Box, Grid, Text } from "@components/system";
+import { createDispatcher, Dispatcher } from "src/recoil/dispatcher";
+import { dispatcherState } from "src/recoil/atoms";
+import { Card, Grid, Stack, Heading } from "@components/system";
+import { Button, RadioButton } from "@components/atoms";
 
 /**
  *
@@ -22,8 +28,20 @@ const fetchQuiz = async () => {
 };
 
 const Home: NextPage = () => {
-  const { isLoading, error, data } = useQuery("", fetchQuiz);
-  console.log(isLoading, error, data);
+  const { data } = useQuery("", fetchQuiz);
+
+  const setDispatcher = useSetRecoilState(dispatcherState);
+  const dispatcher = useRecoilValue(dispatcherState);
+  const dispatcherRef = useRef<Dispatcher>(createDispatcher());
+
+  useEffect(() => {
+    setDispatcher(dispatcherRef.current);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const increment = () => {
+    dispatcher?.incrementScore();
+  };
 
   return (
     <Grid
@@ -34,10 +52,23 @@ const Home: NextPage = () => {
         "repeat(3, 1fr)",
       ]}
     >
-      {data?.map((d: any) => (
-        <Box key={d.id}>
-          <Text>{d.question}</Text>
-        </Box>
+      {data?.map((d: QuizItem) => (
+        <Card
+          key={d.id}
+          boxShadow="m"
+          bg="white"
+          width="100%"
+          borderRadius={8}
+          overflow="hidden"
+        >
+          <Stack gap={[2, null, 6]}>
+            <Heading as="h3" fontSize={[2, 3, 4]}>
+              {d.question}
+            </Heading>
+            <RadioButton />
+            <Button onClick={increment}>test</Button>
+          </Stack>
+        </Card>
       ))}
     </Grid>
   );
