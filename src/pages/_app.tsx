@@ -2,6 +2,7 @@
 import type { AppProps } from "next/app";
 import { ThemeProvider } from "styled-components";
 import { QueryClient, QueryClientProvider } from "react-query";
+// import { ReactQueryDevtools } from "react-query/devtools";
 import { RecoilRoot } from "recoil";
 
 import { DefaultSeo } from "@utils/DefaultSeo";
@@ -18,6 +19,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       <DefaultSeo />
       <ThemeProvider theme={theme}>
         <QueryClientProvider client={queryClient}>
+          {/* <ReactQueryDevtools initialIsOpen={false} /> */}
           <RecoilRoot>
             <>
               <GlobalStyle />

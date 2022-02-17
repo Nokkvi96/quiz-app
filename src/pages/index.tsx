@@ -1,11 +1,11 @@
-import { useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import type { NextPage } from "next";
 import { useQuery } from "react-query";
-import { QuizItem } from "src/types";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 
-import { createDispatcher, Dispatcher } from "src/recoil/dispatcher";
-import { dispatcherState } from "src/recoil/atoms";
+import { QuizItem } from "src/types";
+import { createDispatcher, Dispatcher } from "@state/dispatcher";
+import { dispatcherState } from "@state/atoms";
 import { Card, Grid, Stack, Heading } from "@components/system";
 import { Button, RadioButton } from "@components/atoms";
 
@@ -18,7 +18,7 @@ const fetchQuiz = async () => {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
-      "X-Api-Key": process.env.API_KEY,
+      "X-Api-Key": process.env.NEXT_PUBLIC_API_KEY,
     },
   });
   if (!response.ok) {
@@ -27,8 +27,19 @@ const fetchQuiz = async () => {
   return response.json();
 };
 
+// reducer to handle quiz state
+
+// handle answer if is correct
+// display if is correct add to score appropriately
+
+// next question on click
+//
+// state: question array, correct answer, question number
+
 const Home: NextPage = () => {
   const { data } = useQuery("", fetchQuiz);
+
+  const [correct, setCorrenct] = useState(false);
 
   const setDispatcher = useSetRecoilState(dispatcherState);
   const dispatcher = useRecoilValue(dispatcherState);
@@ -39,8 +50,8 @@ const Home: NextPage = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const increment = () => {
-    dispatcher?.incrementScore();
+  const incrementScore = () => {
+    dispatcher?.incrementScore(correct);
   };
 
   return (
@@ -65,8 +76,8 @@ const Home: NextPage = () => {
             <Heading as="h3" fontSize={[2, 3, 4]}>
               {d.question}
             </Heading>
-            <RadioButton />
-            <Button onClick={increment}>test</Button>
+            <RadioButton name="test" />
+            <Button onClick={incrementScore}>test</Button>
           </Stack>
         </Card>
       ))}

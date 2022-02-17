@@ -1,12 +1,11 @@
 import Link from "next/link";
 import { useRecoilValue } from "recoil";
 
-import { scoreState } from "src/recoil/atoms";
+import { scoreState } from "@state/atoms";
 import { Box, Contain, Flex, Text } from "@components/system";
 
 export const Header: React.FC = () => {
   const score = useRecoilValue(scoreState);
-  console.log(score);
 
   return (
     <Box
