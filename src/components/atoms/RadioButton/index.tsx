@@ -5,7 +5,7 @@ import { Box, BoxProps } from "@components/system";
 
 export type RadioButtonProps = BoxProps &
   InputHTMLAttributes<HTMLInputElement> &
-  HTMLAttributes<any>;
+  HTMLAttributes<any> & { name: string };
 
 export const StyledRadioButton = styled(Box)<RadioButtonProps>`
   cursor: pointer;
@@ -17,6 +17,6 @@ export const StyledRadioButton = styled(Box)<RadioButtonProps>`
   margin-right: 10px;
 `;
 
-export const RadioButton: React.FC<RadioButtonProps> = ({ ...props }) => {
-  return <StyledRadioButton as="input" type="radio" name="radio" {...props} />;
+export const RadioButton: React.FC<RadioButtonProps> = ({ name, ...props }) => {
+  return <StyledRadioButton as="input" type="radio" name={name} {...props} />;
 };
