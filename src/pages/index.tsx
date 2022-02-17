@@ -39,7 +39,7 @@ const fetchQuiz = async () => {
 const Home: NextPage = () => {
   const { data } = useQuery("", fetchQuiz);
 
-  const [correct, setCorrenct] = useState(false);
+  const [correct] = useState(false);
 
   const setDispatcher = useSetRecoilState(dispatcherState);
   const dispatcher = useRecoilValue(dispatcherState);
