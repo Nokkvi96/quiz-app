@@ -17,6 +17,23 @@ export const StyledRadioButton = styled(Box)<RadioButtonProps>`
   margin-right: 10px;
 `;
 
-export const RadioButton: React.FC<RadioButtonProps> = ({ name, ...props }) => {
-  return <StyledRadioButton as="input" type="radio" name={name} {...props} />;
+export const RadioButton: React.FC<RadioButtonProps> = ({
+  color,
+  name,
+  ...props
+}) => {
+  return (
+    <StyledRadioButton
+      as="input"
+      type="radio"
+      name={name}
+      borderColor={color}
+      bg={color}
+      {...props}
+    />
+  );
+};
+
+RadioButton.defaultProps = {
+  color: "bg",
 };
