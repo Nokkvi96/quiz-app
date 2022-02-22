@@ -5,6 +5,9 @@ import { QueryClient, QueryClientProvider } from "react-query";
 // import { ReactQueryDevtools } from "react-query/devtools";
 import { RecoilRoot } from "recoil";
 
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 import { DefaultSeo } from "@utils/DefaultSeo";
 import { BaseLayout } from "@components/templates/BaseLayout";
 import { theme } from "@theme/theme";
@@ -28,6 +31,17 @@ function MyApp({ Component, pageProps }: AppProps) {
               </BaseLayout>
             </>
           </RecoilRoot>
+          <ToastContainer
+            position="top-center"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+          />
         </QueryClientProvider>
       </ThemeProvider>
     </>

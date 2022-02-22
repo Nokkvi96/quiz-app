@@ -5,11 +5,13 @@ import { useEffect, useRef, useReducer } from "react";
 import { useRouter } from "next/router";
 import { useQuery } from "react-query";
 import { useRecoilValue, useSetRecoilState } from "recoil";
+import { toast } from "react-toastify";
 
+import { toastOptions } from "@constants/config";
 import { createDispatcher, Dispatcher } from "@state/dispatcher";
 import { dispatcherState } from "@state/atoms";
-import { Card, Grid, Stack, Heading } from "@components/system";
-import { Button, Tag } from "@components/atoms";
+import { Box, Card, Grid, Stack, Heading } from "@components/system";
+import { Button, Tag, Label } from "@components/atoms";
 import { Checkbox } from "@components/molecules";
 import { equals } from "@utils/index";
 
@@ -18,7 +20,8 @@ type QuizAction =
   | { type: "setQuiz"; payload: QuizItem[] }
   | { type: "setAnswer"; payload: number }
   | { type: "setIsCorrect"; payload: boolean }
-  | { type: "setButton"; payload: boolean };
+  | { type: "setButton"; payload: boolean }
+  | { type: "setToastString" };
 
 type Quiz = {
   questions: QuizItem[];
@@ -26,6 +29,7 @@ type Quiz = {
   index: number;
   isCorrect: boolean;
   buttonDisabled: boolean;
+  toastString: string;
 };
 
 /**
@@ -79,6 +83,12 @@ function quizReducer(state: Quiz, action: QuizAction) {
         buttonDisabled: action.payload,
       };
     }
+    case "setToastString": {
+      return {
+        ...state,
+        toastString: "correct",
+      };
+    }
   }
 }
 
@@ -89,6 +99,7 @@ const initState: Quiz = {
   index: 0,
   isCorrect: false,
   buttonDisabled: true,
+  toastString: "",
 };
 
 const Home: NextPage = () => {
@@ -105,6 +116,7 @@ const Home: NextPage = () => {
     "quiz",
     async () => {
       const response = await fetch(`https://quizapi.io/api/v1/questions`, {
+        mode: "cors",
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -121,16 +133,14 @@ const Home: NextPage = () => {
     }
   );
 
-  // Init dispatcher state
+  // Init recoil dispatcher state
   const setDispatcher = useSetRecoilState(dispatcherState);
   const dispatcher = useRecoilValue(dispatcherState);
   const dispatcherRef = useRef<Dispatcher>(createDispatcher());
-
   // Only runs on mount
   useEffect(() => {
     refetch();
     setDispatcher(dispatcherRef.current);
-    router.push("?category=linux", undefined, { shallow: true });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -160,7 +170,7 @@ const Home: NextPage = () => {
   }, [data]);
 
   /**
-   * refetches when router query updates
+   * Refetches when router query updates
    */
   useEffect(() => {
     if (quizState.index > 19) {
@@ -170,11 +180,6 @@ const Home: NextPage = () => {
   }, [query, quizState.index]);
 
   useEffect(() => {
-    console.log(
-      quizState.playerAnswer.every((element) => {
-        return element === false;
-      })
-    );
     // If player hasn't entered answer then button is disabled else not
     quizState.playerAnswer.every((element) => {
       return element === false;
@@ -199,6 +204,11 @@ const Home: NextPage = () => {
     dispatcher?.incrementScore(quizState.isCorrect);
     dispatch({ type: "resetAnswers" });
     dispatch({ type: "nextQuestion" });
+
+    console.log("herna");
+    quizState.isCorrect
+      ? toast.success(quizState.toastString, toastOptions)
+      : toast.error(quizState.toastString, toastOptions);
   };
 
   return (
@@ -221,22 +231,28 @@ const Home: NextPage = () => {
           overflow="hidden"
         >
           <Stack gap={[2, null, 6]}>
-            <Heading as="h3" fontSize={[2, null, 3]}>
-              {questions[index].question}
-            </Heading>
-            {questions[index]?.tags?.map((a: any, i: number) => (
-              <Tag singleLine key={i}>
-                {a?.name}
-              </Tag>
-            ))}
+            <Stack gap={[1, null, 2]}>
+              <Heading as="h3" fontSize={[2, null, 3]}>
+                {questions[index].question}
+              </Heading>
+              <Label fontSize={[1, null, 2]}>
+                Category: {questions[index].category}
+              </Label>
+              {questions[index]?.tags?.map((a: any, i: number) => (
+                <Tag singleLine key={i}>
+                  {a?.name}
+                </Tag>
+              ))}
+            </Stack>
             <Stack gap={[3, null, 4]}>
               {questions[index].answers.map((a: string, i: number) => (
-                <>
+                <Box key={i}>
                   {a !== null && (
                     <Checkbox
                       label={a}
                       value={i}
                       name="test"
+                      ml={[2, null, 4]}
                       checked={quizState.playerAnswer[i]}
                       onChange={() =>
                         dispatch({
@@ -246,7 +262,7 @@ const Home: NextPage = () => {
                       }
                     />
                   )}
-                </>
+                </Box>
               ))}
             </Stack>
             <Button disabled={quizState.buttonDisabled} onClick={handleSubmit}>
