@@ -12,7 +12,7 @@ export type StyledCheckboxProps = BoxProps &
 
 export type CheckboxProps = StyledCheckboxProps & {
   label: string;
-  checked: boolean;
+  checked?: boolean;
   disabled?: boolean;
   subLabel?: string;
 };
@@ -40,12 +40,10 @@ export const CheckboxWrapper = styled(Box)`
   display: inline-flex;
   flex-direction: row;
   justify-content: space-between;
-  align-content center;
+  align-items center;
   width: 100%;
   cursor: pointer;
 
-  border: 1px solid ${colors.grey300};
-  border-radius: 8px;
   * {
     cursor: inherit
   }
