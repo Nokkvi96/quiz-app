@@ -1,7 +1,6 @@
 module.exports = {
   parser: "@typescript-eslint/parser",
   extends: [
-    // "eslint-config-prettier/@typescript-eslint",
     "prettier",
     "plugin:react/recommended",
     "plugin:react-hooks/recommended",
@@ -11,6 +10,7 @@ module.exports = {
     "plugin:import/warnings",
     "plugin:import/typescript",
     "plugin:jsx-a11y/recommended",
+    "plugin:storybook/recommended",
   ],
   plugins: ["react-hooks"],
   parserOptions: {
@@ -33,7 +33,8 @@ module.exports = {
     "@typescript-eslint/no-empty-interface": "off",
     "@typescript-eslint/ban-ts-ignore": "off",
     "@typescript-eslint/ban-ts-comment": "off",
-    "@typescript-eslint/no-explicit-any": "off", // TODO remove rule
+    "@typescript-eslint/no-explicit-any": "off",
+    // TODO remove rule
     "prettier/prettier": "off",
     "import/no-named-as-default-member": "off",
     "import/default": "off",

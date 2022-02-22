@@ -12,10 +12,11 @@ export type TagProps = BoxProps &
 const { colors } = theme;
 
 const StyledTagWrapper = styled(Box)<TagProps>`
-  position: relative;
-  background-color: ${colors.primary};
-  color: ${colors.primary50};
+  background-color: ${colors.primary100};
+  color: ${colors.primary700};
+  border: 1px solid ${colors.primary200};
   border-radius: 0.2rem;
+  float: left;
   ${(props) =>
     props.singleLine &&
     css`
@@ -34,7 +35,7 @@ const StyledTag = styled(Box)<BoxProps>`
 export const Tag: React.FC<TagProps> = ({ children, ...props }) => {
   return (
     <StyledTagWrapper {...props}>
-      <StyledTag py={[1, null, 2]} px={[2, null, 3]} fontSize={2}>
+      <StyledTag py={1} px={[2, null, 3]} fontSize={2}>
         {children}
       </StyledTag>
     </StyledTagWrapper>
