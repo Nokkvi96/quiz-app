@@ -1,6 +1,6 @@
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 
-import { Checkbox } from "./index";
+import { Button } from "./index";
 
 //👇 This default export determines where your story goes in the story list
 export default {
@@ -8,13 +8,13 @@ export default {
    * See https://storybook.js.org/docs/react/configure/overview#configure-story-loading
    * to learn how to generate automatic titles
    */
-  title: "Checkbox",
-  component: Checkbox,
-} as ComponentMeta<typeof Checkbox>;
+  title: "Button",
+  component: Button,
+} as ComponentMeta<typeof Button>;
 
 //👇 We create a “template” of how args map to rendering
-const Template: ComponentStory<typeof Checkbox> = (args) => (
-  <Checkbox {...args} />
+const Template: ComponentStory<typeof Button> = (args) => (
+  <Button {...args}>{args.children}</Button>
 );
 
 export const Default = Template.bind({});
@@ -22,15 +22,15 @@ export const Disabled = Template.bind({});
 export const Active = Template.bind({});
 
 Default.args = {
-  label: "Default",
+  children: "Default",
 };
 
 Disabled.args = {
-  label: "Disabled",
+  children: "Disabled",
   disabled: true,
 };
 
 Active.args = {
-  label: "Active",
-  checked: true,
+  children: "Active",
+  selected: true,
 };

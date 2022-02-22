@@ -41,35 +41,35 @@ const InputWrapper = styled.div<InputWrapperProps>`
   flex-direction: row;
   justify-content: space-between;
   align-content center;
-  background-color: ${colors.grey400};
+  background-color: ${colors.primary100};
   width: 100%;
 
   color: ${(props) => props.color || colors.black}};
-  border: 1px solid ${colors.grey300};
+  border: 1px solid ${colors.primary400};
   border-radius: 8px;
   padding: 0.4em 0.5em;
 
 
   &:hover {
-    border-color: ${colors.primary300};
+    border-color: ${colors.primary600};
   }
 
   ${(props) =>
     props.hasFocus &&
     css`
-      border: 1px solid ${colors.primary300};
-      outline: 1px solid ${colors.primary300};
+      border: 1px solid ${colors.primary600};
+      outline: 1px solid ${colors.primary600};
     `};
 `;
 
-export const SearchBox: React.FC<InputProps> = ({ size, ...props }) => {
+export const SearchBox: React.FC<InputProps> = ({ label, size, ...props }) => {
   const [hasFocus, setHasFocus] = useState(false);
 
   return (
     <>
-      {props.label && (
+      {label && (
         <Label color={colors.primary800} fontWeight="bold" pb={[2, null, 4]}>
-          {props.label}
+          {label}
         </Label>
       )}
       <InputWrapper hasFocus={hasFocus}>
