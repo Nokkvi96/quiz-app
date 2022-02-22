@@ -1,63 +1,106 @@
-import { useEffect, useRef, useReducer } from "react";
 import type { NextPage } from "next";
+import type { QuizItem } from "src/types";
+
+import { useEffect, useRef, useReducer } from "react";
 import { useRouter } from "next/router";
 import { useQuery } from "react-query";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 
-import { QuizItem } from "src/types";
 import { createDispatcher, Dispatcher } from "@state/dispatcher";
 import { dispatcherState } from "@state/atoms";
 import { Card, Grid, Stack, Heading } from "@components/system";
-import { Button, RadioButton, Label } from "@components/atoms";
+import { Button, Tag } from "@components/atoms";
+import { Checkbox } from "@components/molecules";
+import { equals } from "@utils/index";
 
 type QuizAction =
+  | { type: "nextQuestion" | "resetAnswers" }
   | { type: "setQuiz"; payload: QuizItem[] }
-  | { type: "setQuestion" | "correct" | "incorrect" | "" };
+  | { type: "setAnswer"; payload: number }
+  | { type: "setIsCorrect"; payload: boolean }
+  | { type: "setButton"; payload: boolean };
 
 type Quiz = {
   questions: QuizItem[];
   playerAnswer: boolean[];
   index: number;
-  isNext: boolean;
   isCorrect: boolean;
+  buttonDisabled: boolean;
 };
 
-// display if is correct add to score appropriately
-
-// next question on click
+/**
+ *
+ * @param state
+ * @param action
+ * @returns updated state
+ */
 function quizReducer(state: Quiz, action: QuizAction) {
   switch (action.type) {
     case "setQuiz": {
       return {
         ...state,
         questions: action.payload,
+        index: 0,
       };
     }
-    case "setQuestion": {
+    case "nextQuestion": {
       return {
         ...state,
+        index: state.index + 1,
+      };
+    }
+    case "setAnswer": {
+      return {
+        ...state,
+        playerAnswer: [
+          ...state.playerAnswer.slice(0, action.payload),
+          !state.playerAnswer[action.payload],
+          ...state.playerAnswer.slice(action.payload + 1),
+        ],
+      };
+    }
+    case "setIsCorrect": {
+      return {
+        ...state,
+        isCorrect: action.payload,
+      };
+    }
+    case "resetAnswers": {
+      return {
+        ...state,
+        playerAnswer: state.playerAnswer.map(() => {
+          return false;
+        }),
+      };
+    }
+    case "setButton": {
+      return {
+        ...state,
+        buttonDisabled: action.payload,
       };
     }
   }
-  return state;
 }
 
 // Initialize state for question
 const initState: Quiz = {
   questions: [],
-  playerAnswer: [],
+  playerAnswer: [false, false, false, false, false, false],
   index: 0,
-  isNext: false,
   isCorrect: false,
+  buttonDisabled: true,
 };
 
 const Home: NextPage = () => {
-  // Init router
+  // Init Router
   const router = useRouter();
   const { query } = router;
+
+  // Init quiz state
   const [quizState, dispatch] = useReducer(quizReducer, initState);
   const { questions, index } = quizState;
 
+  // Fetch date frin quiz-api
   const { data, refetch } = useQuery(
     "quiz",
     async () => {
@@ -74,18 +117,19 @@ const Home: NextPage = () => {
       return response.json();
     },
     {
-      enabled: false,
+      enabled: false, // Turn of automatic refetching
     }
   );
 
+  // Init dispatcher state
   const setDispatcher = useSetRecoilState(dispatcherState);
   const dispatcher = useRecoilValue(dispatcherState);
   const dispatcherRef = useRef<Dispatcher>(createDispatcher());
 
   // Only runs on mount
   useEffect(() => {
-    setDispatcher(dispatcherRef.current);
     refetch();
+    setDispatcher(dispatcherRef.current);
     router.push("?category=linux", undefined, { shallow: true });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -104,7 +148,9 @@ const Home: NextPage = () => {
             question: d.question,
             answers: Object.values(d.answers),
             multiple_correct_answers: d.multiple_correct_answers,
-            correct_answers: Object.values(d.correct_answers),
+            correct_answers: Object.values(d.correct_answers).map((a) => {
+              return a === "true";
+            }),
             tags: d.tags,
             category: d.category,
             difficulty: d.difficulty,
@@ -117,12 +163,42 @@ const Home: NextPage = () => {
    * refetches when router query updates
    */
   useEffect(() => {
-    refetch();
+    if (quizState.index > 19) {
+      refetch();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [query, quizState.isNext]);
+  }, [query, quizState.index]);
 
-  const submitAnswer = () => {
+  useEffect(() => {
+    console.log(
+      quizState.playerAnswer.every((element) => {
+        return element === false;
+      })
+    );
+    // If player hasn't entered answer then button is disabled else not
+    quizState.playerAnswer.every((element) => {
+      return element === false;
+    })
+      ? dispatch({ type: "setButton", payload: true })
+      : dispatch({ type: "setButton", payload: false });
+  }, [quizState.playerAnswer]);
+
+  /**
+   * submits answer
+   */
+  const handleSubmit = (e: any) => {
+    e.preventDefault();
+    dispatch({
+      type: "setIsCorrect",
+      // Check if playerAnswer and correct_answer arrays are equal
+      payload: equals(
+        quizState.playerAnswer,
+        quizState.questions[index].correct_answers
+      ),
+    });
     dispatcher?.incrementScore(quizState.isCorrect);
+    dispatch({ type: "resetAnswers" });
+    dispatch({ type: "nextQuestion" });
   };
 
   return (
@@ -148,17 +224,34 @@ const Home: NextPage = () => {
             <Heading as="h3" fontSize={[2, null, 3]}>
               {questions[index].question}
             </Heading>
-            {questions[index].answers.map((a: string, i) => (
-              <>
-                {a !== null && (
-                  <>
-                    <Label key={i}>{a}</Label>
-                    <RadioButton value={i} name="test" />
-                  </>
-                )}
-              </>
+            {questions[index]?.tags?.map((a: any, i: number) => (
+              <Tag singleLine key={i}>
+                {a?.name}
+              </Tag>
             ))}
-            <Button onClick={submitAnswer}>test</Button>
+            <Stack gap={[3, null, 4]}>
+              {questions[index].answers.map((a: string, i: number) => (
+                <>
+                  {a !== null && (
+                    <Checkbox
+                      label={a}
+                      value={i}
+                      name="test"
+                      checked={quizState.playerAnswer[i]}
+                      onChange={() =>
+                        dispatch({
+                          type: "setAnswer",
+                          payload: i,
+                        })
+                      }
+                    />
+                  )}
+                </>
+              ))}
+            </Stack>
+            <Button disabled={quizState.buttonDisabled} onClick={handleSubmit}>
+              Submit Answer
+            </Button>
           </Stack>
         </Card>
       )}

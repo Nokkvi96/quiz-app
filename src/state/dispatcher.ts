@@ -6,7 +6,6 @@ import { ScoreItem } from "src/types";
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const createDispatcher = () => {
   const incrementScore = useRecoilCallback(({ set }) => (correct: boolean) => {
-    console.log("herna");
     set(scoreState, (prev: ScoreItem) => {
       // If answer is correct then we add one to score else it stays the same
       const score = correct ? prev.score + 1 : prev.score;
