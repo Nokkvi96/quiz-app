@@ -44,6 +44,7 @@ const ButtonBase = styled(Box)<ButtonProps>`
   &:disabled {
     cursor: not-allowed;
   }
+  opacity: ${(props) => (props.disabled ? 0.33 : 1)};
 
   ${(props) => (props.inline ? "display: inline-flex" : "")};
   ${(props) => (props.block ? "display: block; width: 100%;" : "")};
@@ -58,7 +59,6 @@ const ButtonLabel = styled.span<ButtonProps>`
   flex-direction: ${(props) => (props.iconReverse ? "row-reverse" : "row")};
 `;
 
-// this is a class component because Buttons often need a ref, and function components require React.forwardRef to forward refs
 export class Button extends Component<ButtonProps> {
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   render() {
@@ -92,7 +92,7 @@ export class Button extends Component<ButtonProps> {
           children
         ) : (
           <ButtonLabel size={size} justify={justify} {...props}>
-            <span>{children}</span>
+            {children}
           </ButtonLabel>
         )}
       </ButtonBase>
