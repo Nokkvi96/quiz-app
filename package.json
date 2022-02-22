@@ -1,7 +1,8 @@
 {
-  "name": "giphy",
+  "homepage": "http://Nokkvi96.github.io/quiz-app",
+  "name": "quiz-app",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -14,7 +15,9 @@
     "format": "prettier --write .",
     "test-all": "npm run check-format && npm run check-lint && npm run check-types && npm run build",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "build-storybook": "build-storybook",
+    "predeploy": "npm run build-storybook",
+    "deploy-storybook": "gh-pages -d storybook-static"
   },
   "dependencies": {
     "dotenv": "^10.0.0",
@@ -60,6 +63,7 @@
     "eslint-plugin-react": "^7.25.1",
     "eslint-plugin-react-hooks": "^4.2.0",
     "eslint-plugin-storybook": "^0.5.7",
+    "gh-pages": "^3.2.3",
     "husky": "^7.0.4",
     "prettier": "^2.4.1",
     "tsconfig-paths-webpack-plugin": "^3.5.2",
