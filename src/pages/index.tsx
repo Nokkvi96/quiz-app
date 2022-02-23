@@ -15,6 +15,8 @@ import { Button, Tag, Label } from "@components/atoms";
 import { Checkbox } from "@components/molecules";
 import { equals } from "@utils/index";
 
+import { Checkmark } from "@components/atoms/Icon/icons";
+
 type QuizAction =
   | { type: "nextQuestion" | "resetAnswers" }
   | { type: "setQuiz"; payload: QuizItem[] }
@@ -265,6 +267,7 @@ const Home: NextPage = () => {
                 </Box>
               ))}
             </Stack>
+            <Checkmark color="blue" fontSize={100} />
             <Button disabled={quizState.buttonDisabled} onClick={handleSubmit}>
               Submit Answer
             </Button>

@@ -1,4 +1,5 @@
 dist
-next.config.js
-.eslintrc.js
+.*rc.js
 storybook-static
+*.config.js
+svgTemplate.js
