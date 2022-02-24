@@ -15,8 +15,6 @@ import { Button, Tag, Label } from "@components/atoms";
 import { Checkbox } from "@components/molecules";
 import { equals } from "@utils/index";
 
-import { Checkmark } from "@components/atoms/Icon/icons";
-
 type QuizAction =
   | { type: "nextQuestion" | "resetAnswers" }
   | { type: "setQuiz"; payload: QuizItem[] }
@@ -232,19 +230,21 @@ const Home: NextPage = () => {
           borderRadius={8}
           overflow="hidden"
         >
-          <Stack gap={[2, null, 6]}>
+          <Stack gap={[2, null, 3]}>
+            <Heading as="h3" fontSize={[2, null, 3]}>
+              {questions[index].question}
+            </Heading>
             <Stack gap={[1, null, 2]}>
-              <Heading as="h3" fontSize={[2, null, 3]}>
-                {questions[index].question}
-              </Heading>
               <Label fontSize={[1, null, 2]}>
                 Category: {questions[index].category}
               </Label>
-              {questions[index]?.tags?.map((a: any, i: number) => (
-                <Tag singleLine key={i}>
-                  {a?.name}
-                </Tag>
-              ))}
+              <Stack direction="row" flexWrap="wrap" gap={[1, null, 2]}>
+                {questions[index]?.tags?.map((a: any, i: number) => (
+                  <Tag singleLine key={i}>
+                    {a?.name}
+                  </Tag>
+                ))}
+              </Stack>
             </Stack>
             <Stack gap={[3, null, 4]}>
               {questions[index].answers.map((a: string, i: number) => (
@@ -267,7 +267,6 @@ const Home: NextPage = () => {
                 </Box>
               ))}
             </Stack>
-            <Checkmark color="blue" fontSize={100} />
             <Button disabled={quizState.buttonDisabled} onClick={handleSubmit}>
               Submit Answer
             </Button>

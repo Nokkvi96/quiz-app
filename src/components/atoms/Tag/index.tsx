@@ -16,7 +16,8 @@ const StyledTagWrapper = styled(Box)<TagProps>`
   color: ${colors.primary700};
   border: 1px solid ${colors.primary200};
   border-radius: 0.2rem;
-  float: left;
+
+  align-self: flex-start;
   ${(props) =>
     props.singleLine &&
     css`
@@ -43,6 +44,5 @@ export const Tag: React.FC<TagProps> = ({ children, ...props }) => {
 };
 
 StyledTagWrapper.defaultProps = {
-  singleLine: true,
-  display: "block",
+  display: "flex",
 };
