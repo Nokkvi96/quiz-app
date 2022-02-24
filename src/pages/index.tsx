@@ -50,8 +50,10 @@ function quizReducer(state: Quiz, action: QuizAction) {
       };
     }
     case "nextQuestion": {
+      const i = state.index >= 19 ? 0 : state.index + 1;
       return {
         ...state,
+        index: i,
       };
     }
     case "setAnswer": {
@@ -65,22 +67,23 @@ function quizReducer(state: Quiz, action: QuizAction) {
       };
     }
     case "setIsCorrect": {
-      console.log(state.index);
-      const ca: string[] = [];
+      const correctAnswersString: string[] = [];
+      // Zip correct_answer array:boolean and answers:string array together
       const zipped = state.questions[state.index].correct_answers.map(
         (x, i) => [x, state.questions[state.index].answers[i]]
       );
+      // Push from zipped array if true
       zipped.forEach((z) => {
         // @ts-ignore
-        z[0] === true && ca.push(z[1]);
+        z[0] === true && correctAnswersString.push(z[1]);
       });
-      console.log(ca);
-      console.log(state.isCorrect);
+
       return {
         ...state,
         isCorrect: action.payload,
-        toastString: ca.join(""),
-        index: state.index + 1,
+        toastString: "Correct answer is: ".concat(
+          correctAnswersString.join(" AND ")
+        ),
         playerAnswer: state.playerAnswer.map(() => {
           return false;
         }),
@@ -193,16 +196,13 @@ const Home: NextPage = () => {
    * Refetches when router query updates
    */
   useEffect(() => {
-    if (quizState.index > 19) {
-      refetch();
-    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query, quizState.index]);
 
   useEffect(() => {
     // If player hasn't entered answer then button is disabled else not
-    quizState.playerAnswer.every((element) => {
-      return element === false;
+    quizState.playerAnswer.every((answer) => {
+      return answer === false;
     })
       ? dispatch({ type: "setButton", payload: true })
       : dispatch({ type: "setButton", payload: false });
@@ -211,7 +211,7 @@ const Home: NextPage = () => {
   /**
    * submits answer
    */
-  const handleSubmit = (e: any) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
 
     dispatch({
@@ -226,6 +226,8 @@ const Home: NextPage = () => {
 
   // Runs when new question and not on mount
   useEffect(() => {
+    quizState.index > 19 && refetch();
+    dispatch({ type: "nextQuestion" });
     if (!isMount) {
       dispatcher?.incrementScore(quizState.isCorrect);
 

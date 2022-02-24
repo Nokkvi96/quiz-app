@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import Link from "next/link";
 import { useRecoilValue } from "recoil";
 
@@ -8,10 +7,6 @@ import { questionCategories } from "@constants/index";
 
 export const Header: React.FC = () => {
   const score = useRecoilValue(scoreState);
-
-  useEffect(() => {
-    Object.values(questionCategories).map((q) => console.log(q));
-  }, []);
 
   return (
     <Box
@@ -35,11 +30,13 @@ export const Header: React.FC = () => {
               <a href="#">Fun Quiz!</a>
             </Link>
           </Text>
-          <Box>
-            {Object.values(questionCategories).map((q) => {
-              <Text>{q}</Text>;
-            })}
-          </Box>
+          {Object.values(questionCategories).map(
+            (category: string, i: number) => (
+              <Text singleLine key={i}>
+                {category}
+              </Text>
+            )
+          )}
           <Text fontSize={[2, null, 3]} fontWeight="600">
             {score.score} / {score.outOf}
           </Text>
