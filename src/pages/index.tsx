@@ -7,6 +7,7 @@ import { useQuery } from "react-query";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { toast } from "react-toastify";
 
+import { useIsMount } from "@utils/useIsMount";
 import { toastOptions } from "@constants/config";
 import { createDispatcher, Dispatcher } from "@state/dispatcher";
 import { dispatcherState } from "@state/atoms";
@@ -30,6 +31,7 @@ type Quiz = {
   isCorrect: boolean;
   buttonDisabled: boolean;
   toastString: string;
+  nextQuestion: boolean;
 };
 
 /**
@@ -50,10 +52,6 @@ function quizReducer(state: Quiz, action: QuizAction) {
     case "nextQuestion": {
       return {
         ...state,
-        index: state.index + 1,
-        playerAnswer: state.playerAnswer.map(() => {
-          return false;
-        }),
       };
     }
     case "setAnswer": {
@@ -67,6 +65,7 @@ function quizReducer(state: Quiz, action: QuizAction) {
       };
     }
     case "setIsCorrect": {
+      console.log(state.index);
       const ca: string[] = [];
       const zipped = state.questions[state.index].correct_answers.map(
         (x, i) => [x, state.questions[state.index].answers[i]]
@@ -75,10 +74,17 @@ function quizReducer(state: Quiz, action: QuizAction) {
         // @ts-ignore
         z[0] === true && ca.push(z[1]);
       });
+      console.log(ca);
+      console.log(state.isCorrect);
       return {
         ...state,
         isCorrect: action.payload,
-        toastString: "Correct answer is: ".concat(ca.join(", ")),
+        toastString: ca.join(""),
+        index: state.index + 1,
+        playerAnswer: state.playerAnswer.map(() => {
+          return false;
+        }),
+        nextQuestion: !state.nextQuestion,
       };
     }
     case "resetAnswers": {
@@ -111,10 +117,12 @@ const initState: Quiz = {
   index: 0,
   isCorrect: false,
   buttonDisabled: true,
-  toastString: "",
+  toastString: " ",
+  nextQuestion: false,
 };
 
 const Home: NextPage = () => {
+  const isMount = useIsMount();
   // Init Router
   const router = useRouter();
   const { query } = router;
@@ -214,14 +222,19 @@ const Home: NextPage = () => {
         quizState.questions[index].correct_answers
       ),
     });
-    dispatch({ type: "nextQuestion" });
-    dispatcher?.incrementScore(quizState.isCorrect);
-    // quizState.questions[index].correct_answers
-
-    quizState.isCorrect
-      ? toast.success(quizState.toastString, toastOptions)
-      : toast.error(quizState.toastString, toastOptions);
   };
+
+  // Runs when new question and not on mount
+  useEffect(() => {
+    if (!isMount) {
+      dispatcher?.incrementScore(quizState.isCorrect);
+
+      quizState.isCorrect
+        ? toast.success(quizState.toastString, toastOptions)
+        : toast.error(quizState.toastString, toastOptions);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [quizState.nextQuestion]);
 
   return (
     <Grid

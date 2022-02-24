@@ -9,3 +9,4 @@ export const equals = (a: Array<any>, b: Array<any>): boolean => {
 };
 
 export * from "./DefaultSeo";
+export * from "./useIsMount";
