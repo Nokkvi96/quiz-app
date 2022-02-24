@@ -51,6 +51,9 @@ function quizReducer(state: Quiz, action: QuizAction) {
       return {
         ...state,
         index: state.index + 1,
+        playerAnswer: state.playerAnswer.map(() => {
+          return false;
+        }),
       };
     }
     case "setAnswer": {
@@ -64,9 +67,18 @@ function quizReducer(state: Quiz, action: QuizAction) {
       };
     }
     case "setIsCorrect": {
+      const ca: string[] = [];
+      const zipped = state.questions[state.index].correct_answers.map(
+        (x, i) => [x, state.questions[state.index].answers[i]]
+      );
+      zipped.forEach((z) => {
+        // @ts-ignore
+        z[0] === true && ca.push(z[1]);
+      });
       return {
         ...state,
         isCorrect: action.payload,
+        toastString: "Correct answer is: ".concat(ca.join(", ")),
       };
     }
     case "resetAnswers": {
@@ -193,6 +205,7 @@ const Home: NextPage = () => {
    */
   const handleSubmit = (e: any) => {
     e.preventDefault();
+
     dispatch({
       type: "setIsCorrect",
       // Check if playerAnswer and correct_answer arrays are equal
@@ -201,11 +214,10 @@ const Home: NextPage = () => {
         quizState.questions[index].correct_answers
       ),
     });
-    dispatcher?.incrementScore(quizState.isCorrect);
-    dispatch({ type: "resetAnswers" });
     dispatch({ type: "nextQuestion" });
+    dispatcher?.incrementScore(quizState.isCorrect);
+    // quizState.questions[index].correct_answers
 
-    console.log("herna");
     quizState.isCorrect
       ? toast.success(quizState.toastString, toastOptions)
       : toast.error(quizState.toastString, toastOptions);
@@ -221,57 +233,59 @@ const Home: NextPage = () => {
       ]}
     >
       {questions.length > 0 && (
-        <Card
-          key={questions[index].id}
-          p={[2, null, 3]}
-          boxShadow="m"
-          bg="white"
-          width="100%"
-          borderRadius={8}
-          overflow="hidden"
-        >
-          <Stack gap={[2, null, 3]}>
-            <Heading as="h3" fontSize={[2, null, 3]}>
-              {questions[index].question}
-            </Heading>
-            <Stack gap={[1, null, 2]}>
-              <Label fontSize={[1, null, 2]}>
-                Category: {questions[index].category}
-              </Label>
-              <Stack direction="row" flexWrap="wrap" gap={[1, null, 2]}>
-                {questions[index]?.tags?.map((a: any, i: number) => (
-                  <Tag singleLine key={i}>
-                    {a?.name}
-                  </Tag>
+        <form onSubmit={handleSubmit}>
+          <Card
+            key={questions[index].id}
+            p={[2, null, 3]}
+            boxShadow="m"
+            bg="white"
+            width="100%"
+            borderRadius={8}
+            overflow="hidden"
+          >
+            <Stack gap={[2, null, 3]}>
+              <Heading as="h3" fontSize={[2, null, 3]}>
+                {questions[index].question}
+              </Heading>
+              <Stack gap={[1, null, 2]}>
+                <Label fontSize={[1, null, 2]}>
+                  Category: {questions[index].category}
+                </Label>
+                <Stack direction="row" flexWrap="wrap" gap={[1, null, 2]}>
+                  {questions[index]?.tags?.map((a: any, i: number) => (
+                    <Tag singleLine key={i}>
+                      {a?.name}
+                    </Tag>
+                  ))}
+                </Stack>
+              </Stack>
+              <Stack gap={[3, null, 4]}>
+                {questions[index].answers.map((a: string, i: number) => (
+                  <Box key={i}>
+                    {a !== null && (
+                      <Checkbox
+                        label={a}
+                        value={i}
+                        name="test"
+                        ml={[2, null, 4]}
+                        checked={quizState.playerAnswer[i]}
+                        onChange={() =>
+                          dispatch({
+                            type: "setAnswer",
+                            payload: i,
+                          })
+                        }
+                      />
+                    )}
+                  </Box>
                 ))}
               </Stack>
+              <Button disabled={quizState.buttonDisabled} type="submit">
+                Submit Answer
+              </Button>
             </Stack>
-            <Stack gap={[3, null, 4]}>
-              {questions[index].answers.map((a: string, i: number) => (
-                <Box key={i}>
-                  {a !== null && (
-                    <Checkbox
-                      label={a}
-                      value={i}
-                      name="test"
-                      ml={[2, null, 4]}
-                      checked={quizState.playerAnswer[i]}
-                      onChange={() =>
-                        dispatch({
-                          type: "setAnswer",
-                          payload: i,
-                        })
-                      }
-                    />
-                  )}
-                </Box>
-              ))}
-            </Stack>
-            <Button disabled={quizState.buttonDisabled} onClick={handleSubmit}>
-              Submit Answer
-            </Button>
-          </Stack>
-        </Card>
+          </Card>
+        </form>
       )}
     </Grid>
   );
