@@ -1,6 +1,7 @@
 import { modularScale } from "polished";
 
 import { DefaultTheme } from "styled-components";
+import * as iconComponents from "@components/atoms/Icon/icons";
 
 import { colors } from "./colors";
 import { grid, ThemeGrid } from "./grid";
@@ -76,6 +77,10 @@ const shadows = {
   xl: "4px 8px 29px rgba(28, 28, 32, 0.08), 3px 6px 8px rgba(28, 28, 32, 0.18)",
   outline: "0px 0px 0px 4px rgba(0, 0, 0, 0.1);",
 };
+
+export const icons = iconComponents;
+
+export type IconOption = keyof typeof icons;
 
 export interface CustomTheme {
   breakpoints: string[];

@@ -1,5 +1,6 @@
 import { ComponentStory, ComponentMeta } from "@storybook/react";
 
+import { Contain } from "@components/system";
 import { Checkbox } from "./index";
 
 //👇 This default export determines where your story goes in the story list
@@ -14,7 +15,9 @@ export default {
 
 //👇 We create a “template” of how args map to rendering
 const Template: ComponentStory<typeof Checkbox> = (args) => (
-  <Checkbox {...args} />
+  <Contain fontSize={3} maxWidth="40ch">
+    <Checkbox checked={false} {...args} />
+  </Contain>
 );
 
 export const Default = Template.bind({});

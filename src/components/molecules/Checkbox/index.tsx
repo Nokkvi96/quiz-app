@@ -2,16 +2,17 @@ import type { InputHTMLAttributes, HTMLAttributes } from "react";
 import styled from "styled-components";
 
 import { Box, BoxProps } from "@components/system";
-import { Label } from "@components/atoms";
+import { Label, Icon } from "@components/atoms";
 
 import { theme } from "@theme/theme";
 
 export type StyledCheckboxProps = BoxProps &
   InputHTMLAttributes<HTMLInputElement> &
-  HTMLAttributes<any> & { name: string };
+  HTMLAttributes<any>;
 
 export type CheckboxProps = StyledCheckboxProps & {
   label: string;
+  name: string;
   checked?: boolean;
   disabled?: boolean;
   subLabel?: string;
@@ -19,24 +20,26 @@ export type CheckboxProps = StyledCheckboxProps & {
 
 const { colors } = theme;
 
-export const StyledCheckbox = styled(Box)<StyledCheckboxProps>`
+const EmptyCheckbox = styled(Box)<StyledCheckboxProps>`
   appearance: none;
   background-color: #fff;
   margin: 0;
+`;
 
+const StyledCheckbox = styled(Box)<StyledCheckboxProps>`
   background: ${(props) =>
     props.checked ? colors.primary700 : colors.primary200};
   color: ${(props) => (props.checked ? colors.primary700 : colors.primary500)};
   width: 2rem;
   height: 2rem;
-  border: 0.15em solid currentColor;
+  border: 1px solid currentColor;
   border-radius: 20%;
   opacity: ${(props) => (props.disabled ? 0.33 : 1)};
   display: grid;
   place-content: center;
 `;
 
-export const CheckboxWrapper = styled(Box)`
+const CheckboxWrapper = styled(Box)`
   display: inline-flex;
   flex-direction: row;
   justify-content: space-between;
@@ -61,19 +64,30 @@ export const Checkbox: React.FC<CheckboxProps> = ({
 }) => {
   const labelColor = disabled ? "grey" : "black";
 
+  let svgColor = "transparent";
+  svgColor = checked ? "primary200" : "transparent";
+
   return (
     <CheckboxWrapper my="auto" onClick={onChange}>
       <Label color={labelColor} fontSize={2}>
         {label}
       </Label>
-      <StyledCheckbox
-        as="input"
-        type="checkbox"
-        name={name}
-        checked={checked}
-        disabled={disabled}
-        {...props}
-      />
+      <StyledCheckbox checked={checked} disabled={disabled} {...props}>
+        <EmptyCheckbox
+          as="input"
+          type="checkbox"
+          name={name}
+          checked={checked}
+          disabled={disabled}
+        />
+        <Icon
+          icon="Checkmark"
+          fontSize="1.8rem"
+          color={svgColor}
+          border={`1px solid ${colors.primary200}`}
+          borderRadius="20%"
+        />
+      </StyledCheckbox>
     </CheckboxWrapper>
   );
 };

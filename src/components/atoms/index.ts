@@ -3,3 +3,4 @@ export * from "./SearchBox";
 export * from "./Label";
 export * from "./RadioButton";
 export * from "./Tag";
+export * from "./Icon";

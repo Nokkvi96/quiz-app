@@ -18,10 +18,10 @@
     "build-storybook": "build-storybook",
     "predeploy": "npm run build-storybook",
     "deploy-storybook": "gh-pages -d storybook-static",
-    "optimize-svg": "svgo --config=svgo.config.js -f ./public/icons",
-    "convert-svg": "npx @svgr/cli --config-file .svgrrc.js public/icons"
+    "convert-svg": "npx @svgr/cli --config-file .svgrrc.js assets/svg"
   },
   "dependencies": {
+    "@styled-system/css": "^5.1.5",
     "dotenv": "^10.0.0",
     "next": "^12.0.7",
     "next-seo": "^4.28.1",
@@ -49,6 +49,7 @@
     "@types/react": "17.0.30",
     "@types/styled-components": "^5.1.15",
     "@types/styled-system": "^5.1.13",
+    "@types/styled-system__css": "^5.0.16",
     "@typescript-eslint/eslint-plugin": "^4.31.0",
     "@typescript-eslint/parser": "^4.31.0",
     "babel-loader": "^8.2.3",

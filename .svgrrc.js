@@ -1,6 +1,5 @@
 module.exports = {
   svgoConfig: "svgo.config.js",
-  //   template: "src/utils/svgTemplate.js",
   outDir: "src/components/atoms/Icon/icons",
   icon: true,
   typescript: true,
