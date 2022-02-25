@@ -3,8 +3,8 @@ import { DefaultSeo as Seo } from "next-seo";
 export const DefaultSeo: React.FC = () => {
   return (
     <Seo
-      title="Nökkvi | Portfolio"
-      description="Portfolio síða fyrir Nökkvi"
+      title="Quiz App"
+      description="Fun quiz with diverse techincal questions"
       canonical="https://www.canonical.ie/"
       openGraph={{
         type: "website",

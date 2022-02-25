@@ -24,6 +24,11 @@ const EmptyCheckbox = styled(Box)<StyledCheckboxProps>`
   appearance: none;
   background-color: #fff;
   margin: 0;
+  display: none;
+  visibility: hidden;
+  opacity: 0;
+  position: absolute;
+  left: -9999px;
 `;
 
 const StyledCheckbox = styled(Box)<StyledCheckboxProps>`
