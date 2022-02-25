@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { useRecoilValue } from "recoil";
 
 import { scoreState } from "@state/atoms";
@@ -7,6 +8,7 @@ import { questionCategories } from "@constants/index";
 
 export const Header: React.FC = () => {
   const score = useRecoilValue(scoreState);
+  const router = useRouter();
 
   return (
     <Box
@@ -33,7 +35,19 @@ export const Header: React.FC = () => {
           {Object.values(questionCategories).map(
             (category: string, i: number) => (
               <Text singleLine key={i}>
-                {category}
+                <Link href="#" passHref>
+                  <a
+                    href="#"
+                    onClick={() => {
+                      router.push({
+                        pathname: "/",
+                        query: { category: category.toLowerCase() },
+                      });
+                    }}
+                  >
+                    {category}
+                  </a>
+                </Link>
               </Text>
             )
           )}

@@ -1,10 +1,7 @@
 export const questionCategories = {
   linux: "Linux",
   devOps: "DevOps",
-  programming: "Programming",
-  cloud: "Cloud",
   docker: "Docker",
-  kubernetes: "Kubernetes",
 };
 
 export const difficulty = {

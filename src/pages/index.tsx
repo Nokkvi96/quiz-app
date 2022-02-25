@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
 import type { QuizItem } from "src/types";
 
-import { useEffect, useRef, useReducer } from "react";
+import { useState, useEffect, useRef, useReducer } from "react";
 import { useRouter } from "next/router";
 import { useQuery } from "react-query";
 import { useRecoilValue, useSetRecoilState } from "recoil";
@@ -11,7 +11,7 @@ import { useIsMount } from "@utils/useIsMount";
 import { toastOptions } from "@constants/config";
 import { createDispatcher, Dispatcher } from "@state/dispatcher";
 import { dispatcherState } from "@state/atoms";
-import { Box, Card, Grid, Stack, Heading } from "@components/system";
+import { Box, Card, Contain, Stack, Heading } from "@components/system";
 import { Button, Tag, Label } from "@components/atoms";
 import { Checkbox } from "@components/molecules";
 import { equals } from "@utils/index";
@@ -113,6 +113,16 @@ function quizReducer(state: Quiz, action: QuizAction) {
   }
 }
 
+const buildQueryString = (
+  category: string | undefined,
+  difficulty: string | undefined
+) => {
+  let string = "https://quizapi.io/api/v1/questions";
+  if (category) string = string.concat(`?category=${category}`);
+  if (difficulty) string.concat(`?difficulty=${difficulty}`);
+  return string;
+};
+
 // Initialize state for question
 const initState: Quiz = {
   questions: [],
@@ -133,12 +143,16 @@ const Home: NextPage = () => {
   // Init quiz state
   const [quizState, dispatch] = useReducer(quizReducer, initState);
   const { questions, index } = quizState;
+  const [queryString, setQueryString] = useState(
+    "https://quizapi.io/api/v1/questions"
+  );
 
   // Fetch date frin quiz-api
   const { data, refetch } = useQuery(
     "quiz",
     async () => {
-      const response = await fetch(`https://quizapi.io/api/v1/questions`, {
+      console.log(queryString);
+      const response = await fetch(queryString, {
         mode: "cors",
         method: "GET",
         headers: {
@@ -162,7 +176,6 @@ const Home: NextPage = () => {
   const dispatcherRef = useRef<Dispatcher>(createDispatcher());
   // Only runs on mount
   useEffect(() => {
-    refetch();
     setDispatcher(dispatcherRef.current);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -196,8 +209,16 @@ const Home: NextPage = () => {
    * Refetches when router query updates
    */
   useEffect(() => {
+    // @ts-ignore
+    setQueryString(buildQueryString(query.category, ""));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [query, quizState.index]);
+  }, [query.category]);
+
+  useEffect(() => {
+    if (!isMount || (!query.category && router.isReady)) {
+      refetch();
+    }
+  }, [queryString]);
 
   useEffect(() => {
     // If player hasn't entered answer then button is disabled else not
@@ -239,14 +260,7 @@ const Home: NextPage = () => {
   }, [quizState.nextQuestion]);
 
   return (
-    <Grid
-      gridGap={[4, null, 6]}
-      gridTemplateColumns={[
-        "repeat(1, 1fr)",
-        "repeat(2, 1fr)",
-        "repeat(3, 1fr)",
-      ]}
-    >
+    <Contain fontSize={[3, null, 4]} maxWidth="40ch">
       {questions.length > 0 && (
         <form onSubmit={handleSubmit}>
           <Card
@@ -259,7 +273,7 @@ const Home: NextPage = () => {
             overflow="hidden"
           >
             <Stack gap={[2, null, 3]}>
-              <Heading as="h3" fontSize={[2, null, 3]}>
+              <Heading as="h3" fontSize={[3, null, 4]}>
                 {questions[index].question}
               </Heading>
               <Stack gap={[1, null, 2]}>
@@ -273,6 +287,11 @@ const Home: NextPage = () => {
                     </Tag>
                   ))}
                 </Stack>
+                {questions[index]?.multiple_correct_answers === true && (
+                  <Tag singleLine>
+                    {questions[index]?.multiple_correct_answers}
+                  </Tag>
+                )}
               </Stack>
               <Stack gap={[3, null, 4]}>
                 {questions[index].answers.map((a: string, i: number) => (
@@ -302,7 +321,7 @@ const Home: NextPage = () => {
           </Card>
         </form>
       )}
-    </Grid>
+    </Contain>
   );
 };
 
