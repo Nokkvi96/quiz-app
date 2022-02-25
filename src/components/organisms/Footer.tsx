@@ -5,13 +5,13 @@ import { Box, Contain, Flex, Text } from "@components/system";
 export const Footer: React.FC = () => {
   return (
     <Box
-      as="header"
+      as="footer"
       boxShadow="l"
       minHeight={["4", "5rem", "6rem"]}
       bg="white"
-      zIndex={40}
+      zIndex={60}
     >
-      <Contain maxWidth={1440} py={[14, 16, 18]} height="100%">
+      <Contain display="flex" maxWidth={1440} py={[14, 16, 18]} height="100%">
         <Flex
           flexDirection={["column", null, "row"]}
           justifyContent="space-around"
@@ -19,11 +19,20 @@ export const Footer: React.FC = () => {
           alignItems="center"
           width="100%"
           height="100%"
+          bg="white"
         >
           <Text fontSize={2} fontWeight="500">
-            <Link href="https://visir.is" passHref>
-              <a href="#">Vísir</a>
+            <Link href="https://github.com/Nokkvi96/quiz-app" passHref>
+              <a href="#">Github repo</a>
             </Link>
+          </Text>
+          <Text fontSize={2} fontWeight="400">
+            Made With:
+            <Text fontSize={2} fontWeight="500">
+              <Link href="https://quizapi.io/" passHref>
+                <a href="#"> QuizApi</a>
+              </Link>
+            </Text>
           </Text>
         </Flex>
       </Contain>
