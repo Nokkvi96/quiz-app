@@ -20,6 +20,9 @@ const Template: ComponentStory<typeof Button> = (args) => (
 export const Default = Template.bind({});
 export const Disabled = Template.bind({});
 export const Active = Template.bind({});
+export const Small = Template.bind({});
+export const Medium = Template.bind({});
+export const Large = Template.bind({});
 
 Default.args = {
   children: "Default",
@@ -33,4 +36,17 @@ Disabled.args = {
 Active.args = {
   children: "Active",
   selected: true,
+};
+
+Small.args = {
+  children: "Small",
+  size: "small",
+};
+Medium.args = {
+  children: "Medium",
+  size: "medium",
+};
+Large.args = {
+  children: "Large",
+  size: "large",
 };

@@ -38,7 +38,6 @@ const buttonBase = {
   fontWeight: "bold",
   border: "1px solid",
   borderColor: "primary",
-  padding: "0 20px",
   height: 50,
   borderRadius: 10,
 };

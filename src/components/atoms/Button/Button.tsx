@@ -1,9 +1,10 @@
 import { ButtonHTMLAttributes, Component } from "react";
 import styled from "styled-components";
 
-import { buttons } from "@theme/theme";
-
 import { Box, BoxProps } from "@components/system";
+
+import { theme, buttons } from "src/theme";
+const { fontSizes, space } = theme;
 
 type ButtonElements = "button" | "a";
 
@@ -35,6 +36,7 @@ const ButtonBase = styled(Box)<ButtonProps>`
   cursor: pointer;
   position: relative;
   user-select: none;
+  align-items: center;
 
   &:focus {
     outline: none;
@@ -45,11 +47,17 @@ const ButtonBase = styled(Box)<ButtonProps>`
     cursor: not-allowed;
   }
   opacity: ${(props) => (props.disabled ? 0.33 : 1)};
+  ${(props) =>
+    props.size === "small"
+      ? `font-size: ${fontSizes[1]}; padding: ${space[2]} ${space[3]}`
+      : props.size === "medium"
+      ? `font-size: ${fontSizes[3]}; padding: ${space[3]} ${space[3]}`
+      : `font-size: ${fontSizes[6]}; padding: ${space[4]} ${space[6]}`};
 
   ${(props) => (props.inline ? "display: inline-flex" : "")};
   ${(props) => (props.block ? "display: block; width: 100%;" : "")};
-  ${(props) => (props.variant !== "clear" ? "height: 50px;" : "")}
 `;
+// ${(props) => (props.variant !== "clear" ? "height: 50px;" : "")};
 
 const ButtonLabel = styled.span<ButtonProps>`
   display: flex;

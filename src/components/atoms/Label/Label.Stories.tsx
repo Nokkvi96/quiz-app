@@ -13,17 +13,7 @@ const Template: ComponentStory<typeof Label> = (args) => (
 );
 
 export const Default = Template.bind({});
-export const Disabled = Template.bind({});
-export const Active = Template.bind({});
 
 Default.args = {
   children: "Default",
-};
-
-Disabled.args = {
-  children: "Disabled",
-};
-
-Active.args = {
-  children: "Active",
 };
