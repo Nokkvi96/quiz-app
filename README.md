@@ -6,11 +6,12 @@
 
 - [Repo](https://github.com/Nokkvi96/quiz-api "Repo")
 
-- [Live](<Homepage https://quiz-app-nokkvi96.vercel.app> "Live View")
+- [Live](https://quiz-app-nokkvi96.vercel.app "Live View")
 
-- [Storybook](<Storybook https://nokkvi96.github.io/quiz-app/>)
+- [Storybook](https://nokkvi96.github.io/quiz-app)
 
-- [API](<API https://quizapi.io/docs/1.0/overview> "API")
+- [API](https://quizapi.io/docs/1.0/overview "API")
+
 
 <!-- ## Screenshots
 
