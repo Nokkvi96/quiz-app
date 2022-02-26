@@ -3,7 +3,7 @@ import { ComponentStory, ComponentMeta } from "@storybook/react";
 import { Label } from "./index";
 
 export default {
-  title: "Label",
+  title: "Atoms/Label",
   component: Label,
 } as ComponentMeta<typeof Label>;
 

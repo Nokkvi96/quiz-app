@@ -5,6 +5,15 @@ import { theme } from "../src/theme";
 import { GlobalStyle } from "../src/theme/GlobalStyle";
 import { Box } from "../src/components/system";
 
+export const parameters = {
+  options: {
+    storySort: {
+      order: ["Atoms", "Form"],
+      method: "alphabetical",
+    },
+  },
+};
+
 addDecorator((story) => (
   <>
     <GlobalStyle />
