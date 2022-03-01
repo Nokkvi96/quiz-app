@@ -4,7 +4,7 @@ import styled from "styled-components";
 import { Box, BoxProps } from "@components/system";
 
 import { theme, buttons } from "src/theme";
-const { fontSizes, space } = theme;
+const { colors, fontSizes, space } = theme;
 
 type ButtonElements = "button" | "a";
 
@@ -37,12 +37,23 @@ const ButtonBase = styled(Box)<ButtonProps>`
   position: relative;
   user-select: none;
   align-items: center;
+  box-shadow: ${theme.shadows.xs};
+
+  transition-timing-function: ease-in-out;
+  transition: border 0.3s, background-color 0.3s, box-shadow 0.3s,
+    transform 0.3s;
 
   &:focus {
-    outline: none;
-    box-shadow: ${(props) => props.theme.shadows.outline || "inherit"};
+    border: none;
+    outline: 4px solid ${colors.secondary200};
+    background-color: ${colors.primary600};
+    box-shadow: ${theme.shadows.m};
   }
 
+  &:hover {
+    background-color: ${colors.primary600};
+    box-shadow: ${theme.shadows.m};
+  }
   &:disabled {
     cursor: not-allowed;
   }
@@ -57,7 +68,6 @@ const ButtonBase = styled(Box)<ButtonProps>`
   ${(props) => (props.inline ? "display: inline-flex" : "")};
   ${(props) => (props.block ? "display: block; width: 100%;" : "")};
 `;
-// ${(props) => (props.variant !== "clear" ? "height: 50px;" : "")};
 
 const ButtonLabel = styled.span<ButtonProps>`
   display: flex;

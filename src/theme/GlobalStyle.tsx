@@ -30,6 +30,12 @@ export const GlobalStyle = createGlobalStyle`
     color: ${theme.colors.black};
   }
 
+  * {
+    &:focus {
+      outline: 3px solid ${theme.colors.secondary300};
+    }
+  }
+
   h1,
   h2,
   h3,

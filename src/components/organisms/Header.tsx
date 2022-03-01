@@ -32,7 +32,7 @@ export const Header: React.FC = () => {
               <a href="#">Fun Quiz!</a>
             </Link>
           </Text>
-          <Stack direction="row" gap={[2, 3, 4]}>
+          <Stack as="nav" direction="row" gap={[2, 3, 4]}>
             {Object.values(questionCategories).map(
               (category: string, i: number) => (
                 <Text singleLine key={i} fontWeight="600">

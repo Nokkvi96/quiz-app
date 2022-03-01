@@ -1,5 +1,6 @@
 import type { InputHTMLAttributes, HTMLAttributes } from "react";
 import styled from "styled-components";
+import { hideVisually } from "polished";
 
 import { Box, BoxProps } from "@components/system";
 import { Label, Icon } from "@components/atoms";
@@ -21,20 +22,12 @@ export type CheckboxProps = StyledCheckboxProps & {
 const { colors } = theme;
 
 const EmptyCheckbox = styled(Box)<StyledCheckboxProps>`
-  appearance: none;
-  background-color: #fff;
-  margin: 0;
-  display: none;
-  visibility: hidden;
-  opacity: 0;
-  position: absolute;
-  left: -9999px;
+  ${hideVisually()}
 `;
 
 const StyledCheckbox = styled(Box)<StyledCheckboxProps>`
-  background: ${(props) =>
-    props.checked ? colors.primary700 : colors.primary200};
-  color: ${(props) => (props.checked ? colors.primary700 : colors.primary500)};
+  background-color: ${colors.primary200};
+  color: ${colors.primary500};
   width: 2rem;
   height: 2rem;
   border: 1px solid currentColor;
@@ -42,6 +35,27 @@ const StyledCheckbox = styled(Box)<StyledCheckboxProps>`
   opacity: ${(props) => (props.disabled ? 0.33 : 1)};
   display: grid;
   place-content: center;
+  cursor: pointer;
+
+  transition-timing-function: ease-in-out;
+  transition: border 0.2s, background-color 0.2s, transform 0.2s;
+
+  &:hover {
+    background-color: ${colors.primary300};
+    color: ${colors.primary300};
+  }
+
+  input:checked + & {
+    background-color: ${colors.primary700};
+    color: ${colors.primary700};
+    &:hover {
+      background-color: ${colors.primary600};
+    }
+  }
+
+  input:focus + & {
+    outline: 2px solid ${colors.secondary300};
+  }
 `;
 
 const CheckboxWrapper = styled(Box)`
@@ -50,11 +64,6 @@ const CheckboxWrapper = styled(Box)`
   justify-content: space-between;
   align-items center;
   width: 100%;
-  cursor: pointer;
-
-  * {
-    cursor: inherit
-  }
 `;
 
 export const Checkbox: React.FC<CheckboxProps> = ({
@@ -64,6 +73,8 @@ export const Checkbox: React.FC<CheckboxProps> = ({
   disabled,
   subLabel,
   checked,
+  onFocus,
+  onBlur,
   onChange,
   ...props
 }) => {
@@ -73,18 +84,20 @@ export const Checkbox: React.FC<CheckboxProps> = ({
   svgColor = checked ? "primary200" : "transparent";
 
   return (
-    <CheckboxWrapper my="auto" onClick={onChange}>
-      <Label color={labelColor} fontSize={2}>
+    <CheckboxWrapper my="auto">
+      <Label color={labelColor} mr={2} fontSize={2}>
         {label}
       </Label>
-      <StyledCheckbox checked={checked} disabled={disabled} {...props}>
-        <EmptyCheckbox
-          as="input"
-          type="checkbox"
-          name={name}
-          checked={checked}
-          disabled={disabled}
-        />
+      <EmptyCheckbox
+        as="input"
+        type="checkbox"
+        onFocus={onFocus}
+        onBlur={onBlur}
+        checked={checked}
+        onChange={onChange}
+        {...props}
+      />
+      <StyledCheckbox disabled={disabled} onClick={onChange}>
         <Icon
           icon="Checkmark"
           fontSize="1.8rem"

@@ -151,7 +151,6 @@ const Home: NextPage = () => {
   const { data, refetch } = useQuery(
     "quiz",
     async () => {
-      console.log(queryString);
       const response = await fetch(queryString, {
         mode: "cors",
         method: "GET",
