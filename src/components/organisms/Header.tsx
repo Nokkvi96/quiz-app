@@ -37,7 +37,7 @@ export const Header: React.FC = () => {
             {Object.values(questionCategories).map(
               (category: string, i: number) => (
                 <Text singleLine key={i} fontWeight="600">
-                  <Link href="#" passHref>
+                  <Link href={`/?category=${category.toLowerCase()}`} passHref>
                     <a
                       href="#"
                       onClick={() => {
