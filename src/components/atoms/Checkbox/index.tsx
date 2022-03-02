@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { hideVisually } from "polished";
 
 import { Box, BoxProps } from "@components/system";
-import { Label, Icon } from "@components/atoms";
+import { Icon } from "@components/atoms";
 
 import { theme } from "@theme/theme";
 
@@ -12,11 +12,9 @@ export type StyledCheckboxProps = BoxProps &
   HTMLAttributes<any>;
 
 export type CheckboxProps = StyledCheckboxProps & {
-  label: string;
   name: string;
   checked?: boolean;
   disabled?: boolean;
-  subLabel?: string;
 };
 
 const { colors } = theme;
@@ -58,43 +56,27 @@ const StyledCheckbox = styled(Box)<StyledCheckboxProps>`
   }
 `;
 
-const CheckboxWrapper = styled(Box)`
-  display: inline-flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items center;
-  width: 100%;
-`;
-
 export const Checkbox: React.FC<CheckboxProps> = ({
   color,
   name,
-  label,
   disabled,
-  subLabel,
   checked,
   onFocus,
   onBlur,
   onChange,
   ...props
 }) => {
-  const labelColor = disabled ? "grey" : "black";
-
   let svgColor = "transparent";
   svgColor = checked ? "primary200" : "transparent";
-
   return (
-    <CheckboxWrapper my="auto">
-      <Label color={labelColor} mr={2} fontSize={2}>
-        {label}
-      </Label>
+    <Box>
       <EmptyCheckbox
         as="input"
         type="checkbox"
         onFocus={onFocus}
         onBlur={onBlur}
-        checked={checked}
         onChange={onChange}
+        checked={checked}
         {...props}
       />
       <StyledCheckbox disabled={disabled} onClick={onChange}>
@@ -106,7 +88,7 @@ export const Checkbox: React.FC<CheckboxProps> = ({
           borderRadius="20%"
         />
       </StyledCheckbox>
-    </CheckboxWrapper>
+    </Box>
   );
 };
 

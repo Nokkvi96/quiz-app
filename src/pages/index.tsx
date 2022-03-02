@@ -11,22 +11,19 @@ import { useIsMount } from "@utils/useIsMount";
 import { toastOptions } from "@constants/config";
 import { createDispatcher, Dispatcher } from "@state/dispatcher";
 import { dispatcherState } from "@state/atoms";
-import { Box, Card, Contain, Stack, Heading } from "@components/system";
+import { Card, Contain, Stack, Heading } from "@components/system";
 import { Button, Tag, Label } from "@components/atoms";
-import { Checkbox } from "@components/molecules";
-import { equals } from "@utils/index";
+import { CheckboxGroup } from "@components/molecules";
+import { arrayEquals } from "@utils/index";
 
 type QuizAction =
-  | { type: "nextQuestion" | "resetAnswers" }
+  | { type: "nextQuestion" | "setToastString" | "setIsCorrect" }
   | { type: "setQuiz"; payload: QuizItem[] }
-  | { type: "setAnswer"; payload: number }
-  | { type: "setIsCorrect"; payload: boolean }
-  | { type: "setButton"; payload: boolean }
-  | { type: "setToastString" };
+  | { type: "setAnswer"; payload: string };
 
 type Quiz = {
   questions: QuizItem[];
-  playerAnswer: boolean[];
+  playerAnswer: string[];
   index: number;
   isCorrect: boolean;
   buttonDisabled: boolean;
@@ -41,6 +38,7 @@ type Quiz = {
  * @returns updated state
  */
 function quizReducer(state: Quiz, action: QuizAction) {
+  // Initializes quiz on refetch
   switch (action.type) {
     case "setQuiz": {
       return {
@@ -49,59 +47,43 @@ function quizReducer(state: Quiz, action: QuizAction) {
         index: 0,
       };
     }
+    // increments index
     case "nextQuestion": {
       const i = state.index >= 19 ? 0 : state.index + 1;
       return {
         ...state,
         index: i,
       };
-    }
+    } // Sets player answer if it was already selected then it deselects else selects
     case "setAnswer": {
+      const answerArray = state.playerAnswer.find(
+        (element) => element === action.payload
+      )
+        ? state.playerAnswer.filter((element) => element !== action.payload)
+        : [...state.playerAnswer, action.payload];
       return {
         ...state,
-        playerAnswer: [
-          ...state.playerAnswer.slice(0, action.payload),
-          !state.playerAnswer[action.payload],
-          ...state.playerAnswer.slice(action.payload + 1),
-        ],
+        playerAnswer: answerArray,
+        buttonDisabled: answerArray.length > 0 ? false : true,
       };
     }
     case "setIsCorrect": {
-      const correctAnswersString: string[] = [];
-      // Zip correct_answer array:boolean and answers:string array together
-      const zipped = state.questions[state.index].correct_answers.map(
-        (x, i) => [x, state.questions[state.index].answers[i]]
-      );
-      // Push from zipped array if true
-      zipped.forEach((z) => {
-        // @ts-ignore
-        z[0] === true && correctAnswersString.push(z[1]);
+      // Creates array with all the correct answers
+      const correctAnswersString: string[] = state.questions[
+        state.index
+      ].answers.filter((q, i) => {
+        if (state.questions[state.index].correct_answers[i]) return q;
       });
 
       return {
         ...state,
-        isCorrect: action.payload,
+        isCorrect: arrayEquals(correctAnswersString, state.playerAnswer),
         toastString: "Correct answer is: ".concat(
           correctAnswersString.join(" AND ")
         ),
-        playerAnswer: state.playerAnswer.map(() => {
-          return false;
-        }),
+        playerAnswer: [],
         nextQuestion: !state.nextQuestion,
-      };
-    }
-    case "resetAnswers": {
-      return {
-        ...state,
-        playerAnswer: state.playerAnswer.map(() => {
-          return false;
-        }),
-      };
-    }
-    case "setButton": {
-      return {
-        ...state,
-        buttonDisabled: action.payload,
+        buttonDisabled: true,
       };
     }
     case "setToastString": {
@@ -126,7 +108,7 @@ const buildQueryString = (
 // Initialize state for question
 const initState: Quiz = {
   questions: [],
-  playerAnswer: [false, false, false, false, false, false],
+  playerAnswer: [],
   index: 0,
   isCorrect: false,
   buttonDisabled: true,
@@ -217,16 +199,8 @@ const Home: NextPage = () => {
     if (!isMount || (!query.category && router.isReady)) {
       refetch();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [queryString]);
-
-  useEffect(() => {
-    // If player hasn't entered answer then button is disabled else not
-    quizState.playerAnswer.every((answer) => {
-      return answer === false;
-    })
-      ? dispatch({ type: "setButton", payload: true })
-      : dispatch({ type: "setButton", payload: false });
-  }, [quizState.playerAnswer]);
 
   /**
    * submits answer
@@ -237,14 +211,13 @@ const Home: NextPage = () => {
     dispatch({
       type: "setIsCorrect",
       // Check if playerAnswer and correct_answer arrays are equal
-      payload: equals(
-        quizState.playerAnswer,
-        quizState.questions[index].correct_answers
-      ),
     });
   };
 
-  // Runs when new question and not on mount
+  /**
+   * dispatches new question
+   * and displays toast
+   */
   useEffect(() => {
     quizState.index > 19 && refetch();
     dispatch({ type: "nextQuestion" });
@@ -292,27 +265,23 @@ const Home: NextPage = () => {
                   </Tag>
                 )}
               </Stack>
-              <Stack gap={[3, null, 4]}>
-                {questions[index].answers.map((a: string, i: number) => (
-                  <Box key={i}>
-                    {a !== null && (
-                      <Checkbox
-                        label={a}
-                        value={i}
-                        name="test"
-                        ml={[2, null, 4]}
-                        checked={quizState.playerAnswer[i]}
-                        onChange={() =>
-                          dispatch({
-                            type: "setAnswer",
-                            payload: i,
-                          })
-                        }
-                      />
-                    )}
-                  </Box>
-                ))}
-              </Stack>
+              <CheckboxGroup
+                gap={[2, 3, 4]}
+                options={questions[index].answers
+                  .filter((q) => q)
+                  .map((filtered) => {
+                    return { value: filtered, label: filtered };
+                  })}
+                name="test"
+                ml={[2, null, 4]}
+                value={quizState.playerAnswer}
+                onChange={(e) =>
+                  dispatch({
+                    type: "setAnswer", // TODO gera læsilegra
+                    payload: e.currentTarget.parentElement.children[0].value,
+                  })
+                }
+              />
               <Button disabled={quizState.buttonDisabled} type="submit">
                 Submit Answer
               </Button>

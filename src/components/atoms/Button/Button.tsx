@@ -40,7 +40,7 @@ const ButtonBase = styled(Box)<ButtonProps>`
   box-shadow: ${theme.shadows.xs};
 
   transition-timing-function: ease-in-out;
-  transition: border 0.3s, background-color 0.3s, box-shadow 0.3s,
+  transition: border 0.3s, background-color 0.3s, box-shadow 0.3s, opacity 0.3s,
     transform 0.3s;
 
   &:focus {

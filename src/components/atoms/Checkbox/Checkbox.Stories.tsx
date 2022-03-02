@@ -9,7 +9,7 @@ export default {
    * See https://storybook.js.org/docs/react/configure/overview#configure-story-loading
    * to learn how to generate automatic titles
    */
-  title: "Form/Checkbox",
+  title: "Atoms/Checkbox",
   component: Checkbox,
 } as ComponentMeta<typeof Checkbox>;
 
@@ -24,16 +24,12 @@ export const Default = Template.bind({});
 export const Disabled = Template.bind({});
 export const Active = Template.bind({});
 
-Default.args = {
-  label: "Default",
-};
+Default.args = {};
 
 Disabled.args = {
-  label: "Disabled",
   disabled: true,
 };
 
 Active.args = {
-  label: "Active",
   checked: true,
 };
