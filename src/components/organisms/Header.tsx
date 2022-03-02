@@ -16,7 +16,8 @@ export const Header: React.FC = () => {
       boxShadow="l"
       maxHeight={["2.6rem", null, "3rem"]}
       height="100%"
-      bg="white"
+      bg="primary800"
+      color="white"
       zIndex={50}
     >
       <Contain maxWidth={1440} py={[1, null, 2]} height="100%">

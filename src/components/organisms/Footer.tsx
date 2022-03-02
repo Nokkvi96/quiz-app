@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Icon } from "@components/atoms";
 
 import { Box, Contain, Flex, Text } from "@components/system";
 
@@ -23,7 +24,12 @@ export const Footer: React.FC = () => {
         >
           <Text fontSize={2} fontWeight="500">
             <Link href="https://github.com/Nokkvi96/quiz-app" passHref>
-              <a href="#">Github repo</a>
+              <a href="#">
+                <Flex>
+                  <Icon icon="Github" />
+                  <Text ml={2}>Github Repo</Text>
+                </Flex>
+              </a>
             </Link>
           </Text>
           <Text fontSize={2} fontWeight="400">

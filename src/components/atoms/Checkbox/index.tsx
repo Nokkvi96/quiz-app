@@ -41,6 +41,7 @@ const StyledCheckbox = styled(Box)<StyledCheckboxProps>`
   &:hover {
     background-color: ${colors.primary300};
     color: ${colors.primary300};
+    transform: scale(1.1);
   }
 
   input:checked + & {

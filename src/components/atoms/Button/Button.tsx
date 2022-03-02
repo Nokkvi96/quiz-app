@@ -33,7 +33,6 @@ export type ButtonProps = BoxProps &
 const ButtonBase = styled(Box)<ButtonProps>`
   display: inline-flex;
   justify-content: center;
-  cursor: pointer;
   position: relative;
   user-select: none;
   align-items: center;
@@ -50,13 +49,15 @@ const ButtonBase = styled(Box)<ButtonProps>`
     box-shadow: ${theme.shadows.m};
   }
 
-  &:hover {
+  &:hover:not(&:disabled) {
     background-color: ${colors.primary600};
     box-shadow: ${theme.shadows.m};
+    transform: scale(1.02);
   }
-  &:disabled {
-    cursor: not-allowed;
+  :not(&:disabled) {
+    cursor: pointer;
   }
+
   opacity: ${(props) => (props.disabled ? 0.33 : 1)};
   ${(props) =>
     props.size === "small"
