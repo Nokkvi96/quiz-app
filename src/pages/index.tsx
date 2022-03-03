@@ -7,14 +7,13 @@ import { useQuery } from "react-query";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { toast } from "react-toastify";
 
-import { useIsMount } from "@utils/useIsMount";
+import { arrayEquals, useIsMount } from "@utils/index";
 import { toastOptions } from "@constants/config";
 import { createDispatcher, Dispatcher } from "@state/dispatcher";
 import { dispatcherState } from "@state/atoms";
 import { Card, Contain, Stack, Heading } from "@components/system";
 import { Button, Tag, Label } from "@components/atoms";
 import { CheckboxGroup } from "@components/molecules";
-import { arrayEquals } from "@utils/index";
 
 type QuizAction =
   | { type: "nextQuestion" | "setToastString" | "setIsCorrect" }
@@ -74,14 +73,17 @@ function quizReducer(state: Quiz, action: QuizAction) {
       ].answers.filter((q, i) => {
         if (state.questions[state.index].correct_answers[i]) return q;
       });
-
+      // sets if correct and prepares next question
       return {
         ...state,
+        // Checks if correctAnswerString array is equals to playerAnswer array
         isCorrect: arrayEquals(correctAnswersString, state.playerAnswer),
         toastString: "Correct answer is: ".concat(
           correctAnswersString.join(" AND ")
         ),
+        // resets answer,
         playerAnswer: [],
+        // triggers next question and disables button
         nextQuestion: !state.nextQuestion,
         buttonDisabled: true,
       };
@@ -129,7 +131,7 @@ const Home: NextPage = () => {
     "https://quizapi.io/api/v1/questions"
   );
 
-  // Fetch date frin quiz-api
+  // Fetch data from quiz-api with react-query
   const { data, refetch } = useQuery(
     "quiz",
     async () => {
@@ -192,9 +194,7 @@ const Home: NextPage = () => {
   useEffect(() => {
     // @ts-ignore
     setQueryString(buildQueryString(query.category, ""));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query.category]);
-
   useEffect(() => {
     if (!isMount || (!query.category && router.isReady)) {
       refetch();
@@ -207,10 +207,8 @@ const Home: NextPage = () => {
    */
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-
     dispatch({
       type: "setIsCorrect",
-      // Check if playerAnswer and correct_answer arrays are equal
     });
   };
 
