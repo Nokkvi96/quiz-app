@@ -22,7 +22,6 @@ const StyledInput = styled.input<InputProps>`
   border: none;
   overflow: hidden;
   margin: 0;
-  color: ${colors.white};
   font-size: ${fontSizes[3]};
   margin-right: 0.2em;
 

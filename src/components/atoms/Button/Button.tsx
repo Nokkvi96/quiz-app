@@ -61,9 +61,9 @@ const ButtonBase = styled(Box)<ButtonProps>`
   opacity: ${(props) => (props.disabled ? 0.33 : 1)};
   ${(props) =>
     props.size === "small"
-      ? `font-size: ${fontSizes[1]}; padding: ${space[2]} ${space[3]}`
+      ? `font-size: ${fontSizes[3]}; padding: ${space[2]} ${space[3]}`
       : props.size === "medium"
-      ? `font-size: ${fontSizes[3]}; padding: ${space[3]} ${space[3]}`
+      ? `font-size: ${fontSizes[4]}; padding: ${space[3]} ${space[4]}`
       : `font-size: ${fontSizes[6]}; padding: ${space[4]} ${space[6]}`};
 
   ${(props) => (props.inline ? "display: inline-flex" : "")};

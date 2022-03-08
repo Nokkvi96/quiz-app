@@ -18,14 +18,8 @@ const Template: ComponentStory<typeof SearchBox> = (args) => (
 );
 
 export const Default = Template.bind({});
-export const Disabled = Template.bind({});
 
 Default.args = {
   label: "Default",
-  value: "Test",
-};
-
-Disabled.args = {
-  label: "Disabled",
-  disabled: true,
+  value: "Searchbox",
 };
