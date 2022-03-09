@@ -49,6 +49,7 @@ const StyledRadioButton = styled(Box)<StyledRadioButtonProps>`
   input:checked + & {
     background-color: ${colors.primary700};
     color: ${colors.primary700};
+
     &:hover {
       background-color: ${colors.primary600};
     }
@@ -82,11 +83,14 @@ export const RadioButton: React.FC<RadioButtonProps> = ({
           name={name}
           {...props}
         />
-        <StyledRadioButton
-          disabled={disabled}
-          onClick={onChange}
-          mr={[3, null, 4]}
-        />
+        <StyledRadioButton disabled={disabled} mr={[3, null, 4]}>
+          <Box
+            border={checked ? `3px solid ${colors.primary200}` : "none"}
+            borderRadius="9999px"
+            height="1.4rem"
+            width="1.4rem"
+          />
+        </StyledRadioButton>
         <Text fontSize={2}>{label}</Text>
       </Flex>
     </Label>
