@@ -34,7 +34,6 @@ const StyledCheckbox = styled(Box)<StyledCheckboxProps>`
   opacity: ${(props) => (props.disabled ? 0.33 : 1)};
   display: grid;
   place-content: center;
-  cursor: pointer;
 
   transition-timing-function: ease-in-out;
   transition: border 0.2s, background-color 0.2s, transform 0.2s;
@@ -81,11 +80,7 @@ export const Checkbox: React.FC<CheckboxProps> = ({
           name={name}
           {...props}
         />
-        <StyledCheckbox
-          disabled={disabled}
-          onClick={onChange}
-          mr={[3, null, 4]}
-        >
+        <StyledCheckbox disabled={disabled} mr={[3, null, 4]}>
           <Icon
             icon="Checkmark"
             fontSize="1.8rem"
