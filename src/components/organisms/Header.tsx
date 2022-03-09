@@ -33,30 +33,53 @@ export const Header: React.FC = () => {
               <a href="#">Fun Quiz!</a>
             </Link>
           </Text>
-          <Stack as="nav" direction="row" gap={[2, 3, 4]}>
-            {Object.values(questionCategories).map(
-              (category: string, i: number) => (
-                <Text singleLine key={i} fontWeight="600">
-                  <Link href={`/?category=${category.toLowerCase()}`} passHref>
-                    <a
-                      href="#"
-                      onClick={() => {
-                        router.push({
-                          pathname: "/",
-                          query: { category: category.toLowerCase() },
-                        });
-                      }}
+          <Box as="nav">
+            <Stack as="ul" direction="row" gap={2}>
+              {Object.values(questionCategories).map(
+                (category: string, i: number) => (
+                  <Box as="li" key={i}>
+                    <Link
+                      href={`/?category=${category.toLowerCase()}`}
+                      passHref
                     >
-                      {category}
-                    </a>
-                  </Link>
-                </Text>
-              )
-            )}
-            <Text fontSize={[2, null, 3]} fontWeight="400">
-              {score.score} / {score.outOf}
-            </Text>
-          </Stack>
+                      <a
+                        href="#"
+                        onClick={() => {
+                          router.push({
+                            pathname: "/",
+                            query: { category: category.toLowerCase() },
+                          });
+                        }}
+                      >
+                        <Text
+                          singleLine
+                          fontWeight="600"
+                          backgroundColor={
+                            router.query.category === category.toLowerCase()
+                              ? "primary50"
+                              : "transparent"
+                          }
+                          color={
+                            router.query.category === category.toLowerCase()
+                              ? "primary700"
+                              : "white"
+                          }
+                          px={2}
+                          py={1}
+                          borderRadius="4px"
+                        >
+                          {category}
+                        </Text>
+                      </a>
+                    </Link>
+                  </Box>
+                )
+              )}
+              <Text fontSize={[2, null, 3]} fontWeight="400">
+                {score.score} / {score.outOf}
+              </Text>
+            </Stack>
+          </Box>
         </Flex>
       </Contain>
     </Box>
