@@ -11,9 +11,9 @@ import { arrayEquals, useIsMount } from "@utils/index";
 import { toastOptions } from "@constants/config";
 import { createDispatcher, Dispatcher } from "@state/dispatcher";
 import { dispatcherState } from "@state/atoms";
-import { Card, Contain, Stack, Heading } from "@components/system";
-import { Button, Tag, Label } from "@components/atoms";
-import { CheckboxGroup } from "@components/molecules";
+import { Card, Contain, Stack, Heading, Text } from "@components/system";
+import { Button, Tag } from "@components/atoms";
+import { RadioButtonGroup, CheckboxGroup } from "@components/molecules";
 
 type QuizAction =
   | { type: "nextQuestion" | "setToastString" | "setIsCorrect" }
@@ -55,11 +55,17 @@ function quizReducer(state: Quiz, action: QuizAction) {
       };
     } // Sets player answer if it was already selected then it deselects else selects
     case "setAnswer": {
-      const answerArray = state.playerAnswer.find(
-        (element) => element === action.payload
-      )
-        ? state.playerAnswer.filter((element) => element !== action.payload)
-        : [...state.playerAnswer, action.payload];
+      const answerArray =
+        state.questions[state.index].multiple_correct_answers === true
+          ? // If multiple_correct_answer we run this
+            state.playerAnswer.find((element) => element === action.payload)
+            ? // If action.payload is already present we remove it
+              state.playerAnswer.filter((element) => element !== action.payload)
+            : // else we append it
+              [...state.playerAnswer, action.payload]
+          : // If !multiple correct we return action.payload only
+            [action.payload];
+      console.log(answerArray);
       return {
         ...state,
         playerAnswer: answerArray,
@@ -176,7 +182,7 @@ const Home: NextPage = () => {
             id: d.id,
             question: d.question,
             answers: Object.values(d.answers),
-            multiple_correct_answers: d.multiple_correct_answers,
+            multiple_correct_answers: d.multiple_correct_answers === "true",
             correct_answers: Object.values(d.correct_answers).map((a) => {
               return a === "true";
             }),
@@ -247,9 +253,9 @@ const Home: NextPage = () => {
                 {questions[index].question}
               </Heading>
               <Stack gap={[1, null, 2]}>
-                <Label fontSize={[1, null, 2]}>
+                <Text fontSize={[1, null, 2]}>
                   Category: {questions[index].category}
-                </Label>
+                </Text>
                 <Stack direction="row" flexWrap="wrap" gap={[1, null, 2]}>
                   {questions[index]?.tags?.map((a: any, i: number) => (
                     <Tag singleLine key={i}>
@@ -257,29 +263,47 @@ const Home: NextPage = () => {
                     </Tag>
                   ))}
                 </Stack>
-                {questions[index]?.multiple_correct_answers === true && (
-                  <Tag singleLine>
-                    {questions[index]?.multiple_correct_answers}
-                  </Tag>
+                {questions[index].multiple_correct_answers && (
+                  <Tag singleLine>Multiple Correct Answers</Tag>
                 )}
               </Stack>
-              <CheckboxGroup
-                gap={[2, 3, 4]}
-                options={questions[index].answers
-                  .filter((q) => q)
-                  .map((filtered) => {
-                    return { value: filtered, label: filtered };
-                  })}
-                name="test"
-                ml={[2, null, 4]}
-                value={quizState.playerAnswer}
-                onChange={(e) =>
-                  dispatch({
-                    type: "setAnswer", // TODO gera læsilegra
-                    payload: e.currentTarget.parentElement.children[0].value,
-                  })
-                }
-              />
+              {questions[index].multiple_correct_answers === true ? (
+                <CheckboxGroup
+                  gap={[2, 3, 4]}
+                  options={questions[index].answers
+                    .filter((q) => q)
+                    .map((filtered) => {
+                      return { value: filtered, label: filtered };
+                    })}
+                  name="test"
+                  ml={[2, null, 4]}
+                  value={quizState.playerAnswer}
+                  onChange={(e) =>
+                    dispatch({
+                      type: "setAnswer",
+                      payload: e.currentTarget.parentElement.children[0].value,
+                    })
+                  }
+                />
+              ) : (
+                <RadioButtonGroup
+                  gap={[2, 3, 4]}
+                  options={questions[index].answers
+                    .filter((q) => q)
+                    .map((filtered) => {
+                      return { value: filtered, label: filtered };
+                    })}
+                  name="test"
+                  ml={[2, null, 4]}
+                  value={quizState.playerAnswer}
+                  onChange={(e) =>
+                    dispatch({
+                      type: "setAnswer",
+                      payload: e.currentTarget.parentElement.children[0].value,
+                    })
+                  }
+                />
+              )}
               <Button disabled={quizState.buttonDisabled} type="submit">
                 Submit Answer
               </Button>

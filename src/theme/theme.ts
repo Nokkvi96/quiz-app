@@ -74,7 +74,7 @@ const shadows = {
   m: "2px 6px 20px rgba(28, 28, 32, 0.1), 1px 3px 4px rgba(28, 28, 32, 0.23)",
   l: "3px 7px 25px rgba(28, 28, 32, 0.08), 2px 4px 6px rgba(28, 28, 32, 0.21)",
   xl: "4px 8px 29px rgba(28, 28, 32, 0.08), 3px 6px 8px rgba(28, 28, 32, 0.18)",
-  outline: "0px 0px 0px 4px rgba(0, 0, 0, 0.1);",
+  outline: `0px 0px 0px 3px ${colors.secondary300};`,
 };
 
 export const icons = iconComponents;

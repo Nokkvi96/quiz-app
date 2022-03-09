@@ -5,7 +5,7 @@ import { Box, BoxProps } from "./Box";
 
 export type CustomGridProps = BoxProps & GridProps;
 
-export const Grid = styled(Box)<GridProps>(compose(grid));
+export const Grid = styled(Box)<CustomGridProps>(compose(grid));
 
 Grid.defaultProps = {
   display: "grid",

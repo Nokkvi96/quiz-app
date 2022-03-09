@@ -2,8 +2,8 @@ import type { InputHTMLAttributes, HTMLAttributes } from "react";
 import styled from "styled-components";
 import { hideVisually } from "polished";
 
-import { Box, BoxProps } from "@components/system";
-import { Icon } from "@components/atoms";
+import { Box, BoxProps, Text, Flex } from "@components/system";
+import { Icon, Label } from "@components/atoms";
 
 import { theme } from "@theme/theme";
 
@@ -15,11 +15,12 @@ export type CheckboxProps = StyledCheckboxProps & {
   name: string;
   checked?: boolean;
   disabled?: boolean;
+  label: string;
 };
 
 const { colors } = theme;
 
-const EmptyCheckbox = styled(Box)<StyledCheckboxProps>`
+const EmptyCheckbox = styled.input<StyledCheckboxProps>`
   ${hideVisually()}
 `;
 
@@ -62,34 +63,40 @@ export const Checkbox: React.FC<CheckboxProps> = ({
   name,
   disabled,
   checked,
+  label,
   onFocus,
   onBlur,
   onChange,
   ...props
 }) => {
-  let svgColor = "transparent";
-  svgColor = checked ? "primary200" : "transparent";
   return (
-    <Box>
-      <EmptyCheckbox
-        as="input"
-        type="checkbox"
-        onFocus={onFocus}
-        onBlur={onBlur}
-        onChange={onChange}
-        checked={checked}
-        {...props}
-      />
-      <StyledCheckbox disabled={disabled} onClick={onChange}>
-        <Icon
-          icon="Checkmark"
-          fontSize="1.8rem"
-          color={svgColor}
-          border={`1px solid ${colors.primary200}`}
-          borderRadius="20%"
+    <Label style={{ cursor: "pointer" }}>
+      <Flex alignItems="center">
+        <EmptyCheckbox
+          as="input"
+          type="checkbox"
+          onFocus={onFocus}
+          onBlur={onBlur}
+          onChange={onChange}
+          name={name}
+          {...props}
         />
-      </StyledCheckbox>
-    </Box>
+        <StyledCheckbox
+          disabled={disabled}
+          onClick={onChange}
+          mr={[3, null, 4]}
+        >
+          <Icon
+            icon="Checkmark"
+            fontSize="1.8rem"
+            color={checked ? "primary200" : "transparent"}
+            border={`1px solid ${colors.primary200}`}
+            borderRadius="20%"
+          />
+        </StyledCheckbox>
+        <Text fontSize={2}>{label}</Text>
+      </Flex>
+    </Label>
   );
 };
 

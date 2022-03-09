@@ -1,14 +1,13 @@
 import type { InputHTMLAttributes, HTMLAttributes } from "react";
-
 import { BoxProps, FlexProps, Stack } from "@components/system";
-import { Checkbox } from "@components/atoms";
+import { RadioButton } from "@components/atoms";
 
 interface Option {
   value: string;
   label: string;
 }
 
-export type CheckboxGroupProps = BoxProps &
+export type RadioButtonGroupProps = BoxProps &
   FlexProps &
   InputHTMLAttributes<HTMLInputElement> &
   HTMLAttributes<any> & {
@@ -20,28 +19,26 @@ export type CheckboxGroupProps = BoxProps &
     name: string;
   };
 
-export const CheckboxGroup: React.FC<CheckboxGroupProps> = ({
+export const RadioButtonGroup: React.FC<RadioButtonGroupProps> = ({
   options,
   checked,
   disabled,
   subLabel,
   gap,
   value,
-  name,
   onChange,
   ...props
 }) => {
   return (
     <ul>
       <Stack gap={gap}>
-        {options.map((option: any, i) => (
+        {options.map((option: any, i: number) => (
           <li key={i}>
-            <Checkbox
+            <RadioButton
               value={option.value}
               checked={value.includes(option.value)}
               onChange={onChange}
               label={option.value}
-              name={name}
               {...props}
             />
           </li>

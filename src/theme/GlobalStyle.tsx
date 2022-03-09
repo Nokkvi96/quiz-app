@@ -120,6 +120,12 @@ export const GlobalStyle = createGlobalStyle`
     font-size: ${theme.fontSizes[3]};
   }
 
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
   a {
     color: inherit;
     text-decoration: none;

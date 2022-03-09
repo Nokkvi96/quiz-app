@@ -1,39 +1,94 @@
-import { InputHTMLAttributes, HTMLAttributes } from "react";
+import type { InputHTMLAttributes, HTMLAttributes } from "react";
 import styled from "styled-components";
+import { hideVisually } from "polished";
 
-import { Box, BoxProps } from "@components/system";
+import { Box, BoxProps, Text, Flex } from "@components/system";
+import { Label } from "@components/atoms";
 
-export type RadioButtonProps = BoxProps &
+import { theme } from "@theme/theme";
+
+export type StyledRadioButtonProps = BoxProps &
   InputHTMLAttributes<HTMLInputElement> &
-  HTMLAttributes<any> & { name: string };
+  HTMLAttributes<any>;
 
-export const StyledRadioButton = styled(Box)<RadioButtonProps>`
-  cursor: pointer;
-  opacity: 1;
-  z-index: 1;
-  border-radius: 50%;
+export type RadioButtonProps = StyledRadioButtonProps & {
+  name: string;
+  checked?: boolean;
+  disabled?: boolean;
+  label: string;
+};
+
+const { colors } = theme;
+
+const EmptyRadioButton = styled.input<StyledRadioButtonProps>`
+  ${hideVisually()};
+`;
+
+const StyledRadioButton = styled(Box)<StyledRadioButtonProps>`
+  flex-shrink: 0;
+  background-color: ${colors.primary200};
+  color: ${colors.primary500};
   width: 2rem;
   height: 2rem;
-  margin-right: 10px;
+  border: 1px solid currentColor;
+  border-radius: 99999px;
+  opacity: ${(props) => (props.disabled ? 0.33 : 1)};
+  display: grid;
+  place-content: center;
+  cursor: pointer;
+
+  transition-timing-function: ease-in-out;
+  transition: border 0.2s, background-color 0.2s, transform 0.2s;
+
+  &:hover {
+    background-color: ${colors.primary300};
+    color: ${colors.primary300};
+    transform: scale(1.1);
+  }
+
+  input:checked + & {
+    background-color: ${colors.primary700};
+    color: ${colors.primary700};
+    &:hover {
+      background-color: ${colors.primary600};
+    }
+  }
+
+  input:focus + & {
+    outline: 2px solid ${colors.secondary300};
+  }
 `;
 
 export const RadioButton: React.FC<RadioButtonProps> = ({
   color,
   name,
+  disabled,
+  checked,
+  label,
+  onFocus,
+  onBlur,
+  onChange,
   ...props
 }) => {
   return (
-    <StyledRadioButton
-      as="input"
-      type="radio"
-      name={name}
-      borderColor={color}
-      bg={color}
-      {...props}
-    />
+    <Label style={{ cursor: "pointer" }}>
+      <Flex alignItems="center">
+        <EmptyRadioButton
+          as="input"
+          type="radio"
+          onFocus={onFocus}
+          onBlur={onBlur}
+          onChange={onChange}
+          name={name}
+          {...props}
+        />
+        <StyledRadioButton
+          disabled={disabled}
+          onClick={onChange}
+          mr={[3, null, 4]}
+        />
+        <Text fontSize={2}>{label}</Text>
+      </Flex>
+    </Label>
   );
-};
-
-RadioButton.defaultProps = {
-  color: "bg",
 };
