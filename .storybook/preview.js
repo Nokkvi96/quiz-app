@@ -1,4 +1,5 @@
 import { addDecorator } from "@storybook/react";
+
 import { ThemeProvider } from "styled-components";
 
 import { theme } from "../src/theme";
@@ -8,7 +9,7 @@ import { Box } from "../src/components/system";
 export const parameters = {
   options: {
     storySort: {
-      order: ["Atoms", "Form"],
+      order: ["Welcome", "Styles", "Atoms", "Form", "Utility Classes"],
       method: "alphabetical",
     },
   },

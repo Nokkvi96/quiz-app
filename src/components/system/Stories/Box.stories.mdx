@@ -1,0 +1,24 @@
+import { ArgsTable, Canvas, Meta, Story } from "@storybook/addon-docs";
+
+import { Box, BoxProps } from "../Box";
+
+<Meta
+  title="Utility Components/Box"
+  parameters={{
+    viewMode: "docs",
+    previewTabs: {
+      canvas: { hidden: true },
+    },
+  }}
+  component={Box}
+/>
+
+# Box
+
+The `Box` Component is the most primitive type, and every other component extends the Box
+
+<Story name="Box">
+  <Box width="4rem" height="4rem" bg="primary" />
+</Story>
+
+<ArgsTable of={Box} />

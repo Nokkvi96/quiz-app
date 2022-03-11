@@ -1,0 +1,82 @@
+import { Meta, Typeset } from "@storybook/addon-docs";
+
+import { Box, BoxProps } from "@components/atoms";
+import { theme } from "@theme/theme";
+
+<Meta
+  title="Styles/Typography"
+  parameters={{
+    viewMode: "docs",
+    previewTabs: {
+      canvas: { hidden: true },
+    },
+  }}
+/>
+
+# Typography
+
+The typography uses a modular scale with a ratio of major third, and a base size of 1rem.
+The modular scale
+
+[Learn More About Modular Scale](https://every-layout.dev/rudiments/modular-scale/)
+
+## Heading
+
+**Font:** Lora
+
+**Weights:** 400(regular), 700(bold)
+
+**Italics:** 400(regular)
+
+<Typeset
+  fontSizes={[
+    theme.fontSizes[3],
+    theme.fontSizes[4],
+    theme.fontSizes[5],
+    theme.fontSizes[6],
+    theme.fontSizes[7],
+    theme.fontSizes[8],
+    theme.fontSizes[11],
+  ]}
+  fontWeight="400"
+  sampleText="Heading"
+  fontFamily="Lora"
+/>
+
+**Font:** Poppins
+
+**Weights:** 400(regular), 500(medium), 600(semibold) 700(bold)
+
+<Typeset
+  fontSizes={[theme.fontSizes[2]]}
+  fontWeight="400"
+  sampleText="Regular"
+  fontFamily="Poppins"
+/>
+<Typeset
+  fontSizes={[theme.fontSizes[2]]}
+  fontWeight="500"
+  sampleText="Medium"
+  fontFamily="Poppins"
+/>
+<Typeset
+  fontSizes={[theme.fontSizes[2]]}
+  fontWeight="600"
+  sampleText="SemiBold"
+  fontFamily="Poppins"
+/>
+<Typeset
+  fontSizes={[theme.fontSizes[2]]}
+  fontWeight="700"
+  sampleText="Bold"
+  fontFamily="Poppins"
+/>
+
+### All available font sizes
+
+<Typeset
+  fontSizes={theme.fontSizes}
+  fontWeight="400"
+  sampleText="The quick brown fox jumps over the lazy dog"
+  fontFamily="Poppins"
+/>

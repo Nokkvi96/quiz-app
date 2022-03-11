@@ -17,3 +17,5 @@ export const Default = Template.bind({});
 Default.args = {
   children: "Default",
 };
+
+Default.storyName = "Label";

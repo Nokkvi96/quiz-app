@@ -21,6 +21,9 @@
     "convert-svg": "npx @svgr/cli --config-file .svgrrc.js assets/svg"
   },
   "dependencies": {
+    "@mdx-js/loader": "^2.0.0",
+    "@storybook/addon-storyshots": "^6.4.19",
+    "@storybook/react-docgen-typescript-plugin": "^1.0.2-canary.253f8c1.0",
     "@styled-system/css": "^5.1.5",
     "dotenv": "^10.0.0",
     "next": "^12.0.7",
@@ -39,6 +42,7 @@
     "@babel/core": "^7.17.5",
     "@storybook/addon-a11y": "^6.4.19",
     "@storybook/addon-actions": "^6.4.19",
+    "@storybook/addon-docs": "^6.4.19",
     "@storybook/addon-essentials": "^6.4.19",
     "@storybook/addon-interactions": "^6.4.19",
     "@storybook/addon-links": "^6.4.19",
@@ -63,6 +67,7 @@
     "eslint-import-resolver-typescript": "^2.5.0",
     "eslint-plugin-import": "^2.24.2",
     "eslint-plugin-jsx-a11y": "^6.4.1",
+    "eslint-plugin-mdx": "^1.16.0",
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-react": "^7.25.1",
     "eslint-plugin-react-hooks": "^4.2.0",

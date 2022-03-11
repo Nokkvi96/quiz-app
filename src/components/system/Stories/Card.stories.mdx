@@ -1,0 +1,30 @@
+import { ArgsTable, Canvas, Meta, Story } from "@storybook/addon-docs";
+
+import { Card, CardProps } from "@components/system";
+
+<Meta
+  title="Utility Components/Card"
+  parameters={{
+    viewMode: "docs",
+    previewTabs: {
+      canvas: { hidden: true },
+    },
+  }}
+  component={Card}
+/>
+
+# Card
+
+The `Card` Component is an extension of the `Box` Component and adds BorderProps
+
+<Story name="Card">
+  <Card
+    width="12rem"
+    height="12rem"
+    bg="white"
+    border="1px solid black"
+    borderRadius="1rem"
+  />
+</Story>
+
+<ArgsTable of={CardProps} />
