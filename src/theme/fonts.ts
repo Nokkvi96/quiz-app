@@ -10,14 +10,14 @@ export const fonts = {
   ...fontFace({
     fontFamily: "Lora",
     fontFilePath: "/public/fonts/lora/Lora-Italic.ttf",
-    fontWeight: "normal",
+    fontWeight: "regular",
     fontStyle: "italic",
     fontDisplay: "fallback",
   }),
   ...fontFace({
     fontFamily: "Lora",
     fontFilePath: "/public/fonts/lora/Lora-Regular.ttf",
-    fontWeight: "normal",
+    fontWeight: "regular",
     fontDisplay: "fallback",
   }),
   ...fontFace({
@@ -35,7 +35,7 @@ export const fonts = {
   ...fontFace({
     fontFamily: "Poppins",
     fontFilePath: "/public/fonts/poppins/Poppins-Regular.ttf",
-    fontWeight: "normal",
+    fontWeight: "regular",
     fontDisplay: "fallback",
   }),
   ...fontFace({
