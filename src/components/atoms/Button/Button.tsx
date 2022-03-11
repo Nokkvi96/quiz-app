@@ -1,9 +1,11 @@
 import { ButtonHTMLAttributes, Component } from "react";
+import { Omit } from "src/types";
+
 import styled from "styled-components";
 
 import { Box, BoxProps } from "@components/system";
-
 import { theme, buttons } from "src/theme";
+
 const { colors, fontSizes, space } = theme;
 
 type ButtonElements = "button" | "a";
@@ -15,13 +17,17 @@ interface ConditionalProps {
 
 export type ButtonProps = BoxProps &
   ButtonHTMLAttributes<HTMLButtonElement> & {
-    as?: ButtonElements;
+    /** Button is deafult */
+    as: ButtonElements;
+    /** Primary is deafult */
     variant?: keyof typeof buttons;
+    /** medium is deafult */
     size?: "small" | "medium" | "large";
     disabled?: boolean;
     iconReverse?: boolean;
     block?: boolean;
     inline?: boolean;
+    /** center is deafult */
     justify?: "center" | "space-between";
     loading?: boolean;
     selected?: boolean;
@@ -30,7 +36,9 @@ export type ButtonProps = BoxProps &
     target?: string;
   };
 
-const ButtonBase = styled(Box)<ButtonProps>`
+type ButtonBaseProps = Omit<ButtonProps, "as">;
+
+const ButtonBase = styled(Box)<ButtonBaseProps>`
   display: inline-flex;
   justify-content: center;
   position: relative;
@@ -70,7 +78,7 @@ const ButtonBase = styled(Box)<ButtonProps>`
   ${(props) => (props.block ? "display: block; width: 100%;" : "")};
 `;
 
-const ButtonLabel = styled.span<ButtonProps>`
+const ButtonLabel = styled.span<ButtonBaseProps>`
   display: flex;
   width: 100%;
   align-items: center;

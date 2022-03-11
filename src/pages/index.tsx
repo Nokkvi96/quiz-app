@@ -304,7 +304,11 @@ const Home: NextPage = () => {
                   }
                 />
               )}
-              <Button disabled={quizState.buttonDisabled} type="submit">
+              <Button
+                as="button"
+                disabled={quizState.buttonDisabled}
+                type="submit"
+              >
                 Submit Answer
               </Button>
             </Stack>
