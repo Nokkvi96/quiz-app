@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { hideVisually } from "polished";
 
 import { Box, BoxProps, Text, Flex } from "@components/system";
-import { Label } from "@components/atoms";
+import { Label, LabelProps } from "@components/atoms";
 
 import { theme } from "@theme/theme";
 
@@ -19,6 +19,23 @@ export type RadioButtonProps = StyledRadioButtonProps & {
 };
 
 const { colors } = theme;
+
+const StyledLabel = styled(Label)<LabelProps & { disabled?: boolean }>`
+  cursor: pointer;
+  ${(props) =>
+    props.disabled &&
+    `
+  cursor: default;
+  opacity: 0.63;
+  `}
+
+  input:disabled + & {
+    cursor: deafult;
+    &:hover {
+      background-color: ${colors.primary600};
+    }
+  }
+`;
 
 const EmptyRadioButton = styled.input<StyledRadioButtonProps>`
   ${hideVisually()};
@@ -72,7 +89,7 @@ export const RadioButton: React.FC<RadioButtonProps> = ({
   ...props
 }) => {
   return (
-    <Label style={{ cursor: "pointer" }}>
+    <StyledLabel disabled={disabled}>
       <Flex alignItems="center">
         <EmptyRadioButton
           as="input"
@@ -93,6 +110,6 @@ export const RadioButton: React.FC<RadioButtonProps> = ({
         </StyledRadioButton>
         <Text fontSize={2}>{label}</Text>
       </Flex>
-    </Label>
+    </StyledLabel>
   );
 };

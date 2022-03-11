@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { hideVisually } from "polished";
 
 import { Box, BoxProps, Text, Flex } from "@components/system";
-import { Icon, Label } from "@components/atoms";
+import { Icon, Label, LabelProps } from "@components/atoms";
 
 import { theme } from "@theme/theme";
 
@@ -19,6 +19,23 @@ export type CheckboxProps = StyledCheckboxProps & {
 };
 
 const { colors } = theme;
+
+const StyledLabel = styled(Label)<LabelProps & { disabled?: boolean }>`
+  cursor: pointer;
+  ${(props) =>
+    props.disabled &&
+    `
+  cursor: default;
+  opacity: 0.63;
+  `}
+
+  input:disabled + & {
+    cursor: deafult;
+    &:hover {
+      background-color: ${colors.primary600};
+    }
+  }
+`;
 
 const EmptyCheckbox = styled.input<StyledCheckboxProps>`
   ${hideVisually()}
@@ -38,11 +55,13 @@ const StyledCheckbox = styled(Box)<StyledCheckboxProps>`
   transition-timing-function: ease-in-out;
   transition: border 0.2s, background-color 0.2s, transform 0.2s;
 
-  &:hover {
+  ${(props) =>
+    !props.disabled &&
+    `&:hover {
     background-color: ${colors.primary300};
     color: ${colors.primary300};
     transform: scale(1.1);
-  }
+  }`}
 
   input:checked + & {
     background-color: ${colors.primary700};
@@ -58,7 +77,6 @@ const StyledCheckbox = styled(Box)<StyledCheckboxProps>`
 `;
 
 export const Checkbox: React.FC<CheckboxProps> = ({
-  color,
   name,
   disabled,
   checked,
@@ -69,7 +87,7 @@ export const Checkbox: React.FC<CheckboxProps> = ({
   ...props
 }) => {
   return (
-    <Label style={{ cursor: "pointer" }}>
+    <StyledLabel disabled={disabled}>
       <Flex alignItems="center">
         <EmptyCheckbox
           as="input"
@@ -91,10 +109,6 @@ export const Checkbox: React.FC<CheckboxProps> = ({
         </StyledCheckbox>
         <Text fontSize={2}>{label}</Text>
       </Flex>
-    </Label>
+    </StyledLabel>
   );
-};
-
-StyledCheckbox.defaultProps = {
-  color: "primary",
 };

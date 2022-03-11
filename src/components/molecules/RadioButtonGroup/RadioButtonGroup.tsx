@@ -30,20 +30,18 @@ export const RadioButtonGroup: React.FC<RadioButtonGroupProps> = ({
   ...props
 }) => {
   return (
-    <ul>
-      <Stack gap={gap}>
-        {options.map((option: any, i: number) => (
-          <li key={i}>
-            <RadioButton
-              value={option.value}
-              checked={value.includes(option.value)}
-              onChange={onChange}
-              label={option.value}
-              {...props}
-            />
-          </li>
-        ))}
-      </Stack>
-    </ul>
+    <Stack as="ul" gap={gap}>
+      {options.map((option: any, i: number) => (
+        <li key={i}>
+          <RadioButton
+            value={option.value}
+            checked={value.includes(option.value)}
+            onChange={onChange}
+            label={option.value}
+            {...props}
+          />
+        </li>
+      ))}
+    </Stack>
   );
 };

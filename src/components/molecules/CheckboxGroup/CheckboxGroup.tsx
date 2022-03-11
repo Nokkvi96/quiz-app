@@ -32,21 +32,19 @@ export const CheckboxGroup: React.FC<CheckboxGroupProps> = ({
   ...props
 }) => {
   return (
-    <ul>
-      <Stack gap={gap}>
-        {options.map((option: any, i) => (
-          <li key={i}>
-            <Checkbox
-              value={option.value}
-              checked={value.includes(option.value)}
-              onChange={onChange}
-              label={option.value}
-              name={name}
-              {...props}
-            />
-          </li>
-        ))}
-      </Stack>
-    </ul>
+    <Stack as="ul" gap={gap}>
+      {options.map((option: any, i) => (
+        <li key={i}>
+          <Checkbox
+            value={option.value}
+            checked={value.includes(option.value)}
+            onChange={onChange}
+            label={option.value}
+            name={name}
+            {...props}
+          />
+        </li>
+      ))}
+    </Stack>
   );
 };

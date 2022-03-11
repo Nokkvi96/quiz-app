@@ -56,7 +56,7 @@ export const Header: React.FC = () => {
                           fontWeight="600"
                           backgroundColor={
                             router.query.category === category.toLowerCase()
-                              ? "primary50"
+                              ? "primary100"
                               : "transparent"
                           }
                           color={
