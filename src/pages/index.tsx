@@ -6,6 +6,8 @@ import { useRouter } from "next/router";
 import { useQuery } from "react-query";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { toast } from "react-toastify";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
 import { arrayEquals, useIsMount } from "@utils/index";
 import { toastOptions } from "@constants/config";
@@ -237,18 +239,17 @@ const Home: NextPage = () => {
 
   return (
     <Contain fontSize={[3, null, 4]} maxWidth="40ch">
-      {questions.length > 0 && (
-        <form onSubmit={handleSubmit}>
-          <Card
-            key={questions[index].id}
-            p={[2, null, 3]}
-            boxShadow="m"
-            bg="white"
-            width="100%"
-            borderRadius={8}
-            overflow="hidden"
-          >
-            <Stack gap={[2, null, 3]}>
+      <form onSubmit={handleSubmit}>
+        <Card
+          p={[2, null, 3]}
+          boxShadow="m"
+          bg="white"
+          width="100%"
+          borderRadius={8}
+          overflow="hidden"
+        >
+          {questions.length > 0 ? (
+            <Stack gap={[2, null, 3]} key={questions[index].id}>
               <Heading as="h3" fontSize={[3, null, 4]}>
                 {questions[index].question}
               </Heading>
@@ -312,9 +313,17 @@ const Home: NextPage = () => {
                 Submit Answer
               </Button>
             </Stack>
-          </Card>
-        </form>
-      )}
+          ) : (
+            <>
+              <Skeleton height={60} />
+              <Skeleton height={20} width="40%" />
+              <Skeleton height={20} width="30%" />
+              <Skeleton count={4} height={35} />
+              <Skeleton height={45} />
+            </>
+          )}
+        </Card>
+      </form>
     </Contain>
   );
 };

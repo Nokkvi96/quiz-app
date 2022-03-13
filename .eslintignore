@@ -2,4 +2,5 @@ dist
 .*rc.js
 storybook-static
 *.config.js
+*.setup.js
 svgTemplate.js
